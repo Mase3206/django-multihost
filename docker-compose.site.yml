@@ -1,0 +1,55 @@
+name: ${GROUP_NAME:?Please set the group name in the '.env' file.}
+
+services:
+  postgres: 
+    # container_name: postgres
+    image: postgres:17.0
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=0789wh0789rwc89rhmn0w98xf0948x5n9hwf
+      - "POSTGRES_USER=pguser"
+      - "POSTGRES_DB=pgdb"
+
+
+  gunicorn:
+    # container_name: gunicorn
+    image: cs-umt/gunicorn
+    build:
+      dockerfile: ./gunicorn.Dockerfile
+      context: .
+    # healthcheck:
+      # test: ['CMD', 'curl', '-f', 'http://localhost:8000/']
+      # interval: 5s
+      # timeout: 60s
+      # retries: 10
+    volumes:
+      - ./site:/sites/django
+      - gunicorn:/run/www/django
+    labels:
+      # - "traefik.enable=true"
+      # set the hostname and path
+      - "traefik.http.routers.gunicorn-${GROUP_NAME}.rule=Host(`localhost`)"
+      - "traefik.http.routers.gunicorn-${GROUP_NAME}.rule=PathPrefix(`/${SITE_NAME}`)"
+      # strip the path away and continue
+      - "traefik.http.routers.gunicorn-${GROUP_NAME}.middlewares=gunicorn-${GROUP_NAME}-stripprefix"
+      - "traefik.http.middlewares.gunicorn-${GROUP_NAME}-stripprefix.stripprefix.prefixes=/${SITE_NAME}"
+    environment:
+      - "POSTGRES_USER=pguser"
+      - POSTGRES_PASSWORD=0789wh0789rwc89rhmn0w98xf0948x5n9hwf
+      - "POSTGRES_DB=pgdb"
+
+      - "DJANGO_DATABASE=prod"
+
+      - "SITE_FOLDER=${SITE_FOLDER:-django}"
+      - "SITE_NAME=${SITE_NAME:?Please set the site name in the '.env' file.}"
+
+
+volumes:
+  postgres: {}
+  gunicorn: {}
+
+networks:
+  default:
+    name: traefik
+    external: true
