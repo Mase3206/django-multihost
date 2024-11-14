@@ -3,8 +3,8 @@
 set -e
 
 
-if [[ "$1" == "-h" ]] || [[ "$2" == "-h" ]] \
-	|| [[ "$1" == "" ]] || [[ "$2" == "-h" ]]; then
+if [[ "$1" == "-h" ]] || [[ "$2" == "-h" ]] || [[ "$1" == "" ]] || [[ "$2" == "" ]]; then
+	echo "Error: missing arguments." 
 	echo "$0 season group_name"
 fi
 
