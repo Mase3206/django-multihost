@@ -176,7 +176,7 @@ def prep(args: argparse.Namespace):
 	args.stack = 'site'
 	# command = ['docker']
 	thisFolder = getcwd()
-	shouldExist_files = ['docker-compose.site.yml', 'deploy.py']
+	shouldExist_files = ['docker-compose.site.yml', 'instructions.md']
 	shouldExist_folders = ['site', ]
 
 	print('Making sure all the right folders and files are present... ')
