@@ -1,3 +1,7 @@
 unused/
 venv/
 **/*.DS_Store
+
+site
+.env
+.venv/
