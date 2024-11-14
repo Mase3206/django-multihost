@@ -19,6 +19,7 @@ install:
 	sudo chown -R $(USER):classadmin ./*
 	sudo chmod 664 ./*
 	sudo chmod 775 deploy.py
+	sudo chmod 774 create-group.sh
 # groups should not have execute access to create more groups
 
 	sudo ln -s $(CWD)/deploy.py /usr/local/bin/deploy
