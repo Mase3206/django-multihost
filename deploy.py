@@ -199,7 +199,11 @@ def prep(args: argparse.Namespace):
 		gitRepo = input("Enter the full URL to your group's GitHub repo: ")
 		repoIsValid = _validateRepo(gitRepo)
 		if not repoIsValid: print('Repo is not a valid url.', end=' ')
+	
+	print('Cloning repo...')
+	subprocess.run(['git', 'clone', gitRepo, 'site'], stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
 
+	
 	expectedProjectFolders = ['django', 'django_site', 'django_project', 'dj']
 	pfName = ''
 	found = False
@@ -234,8 +238,6 @@ def prep(args: argparse.Namespace):
 			SITE_FOLDER={pfName}
 			"""
 		)
-		print('Cloning repo...')
-		subprocess.run(['git', 'clone', gitRepo, 'site'], stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
 
 		print("Writing configuration to '.env'...", end=' ')
 		with open(thisFolder + '/.env', 'w+') as envFile:
