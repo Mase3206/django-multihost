@@ -2,6 +2,13 @@
 
 set -e
 
+
+if [[ "$1" == "-h" ]] || [[ "$2" == "-h" ]] \
+	|| [[ "$1" == "" ]] || [[ "$2" == "-h" ]]; then
+	echo "$0 season group_name"
+fi
+
+
 season=$1
 group_name=$2
 
