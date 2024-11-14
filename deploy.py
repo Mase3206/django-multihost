@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.12
 
 import argparse
 import subprocess
@@ -56,20 +56,29 @@ def getServicesInStack(stack: str) -> list[str]:
 	return services
 
 
-def runCommand(args: argparse.Namespace, command: list):
+def runCommand(args: argparse.Namespace, command: list, toStdOut=False, quiet=False):
 	"""
 	Check if the stack given via CLI exists, then run the given command list via `subprocess.run()`, printing an error if the stack does not exist.
 
 	Arguments
 	---------
-		args (argparse.Namespace) : parsed command-line arguments from `argparse`
-		command (list) : command list containing the program name and all arguments
+		args (argparse.Namespace) : parsed command-line arguments from `argparse`.
+		command (list) : command list containing the program name and all arguments.
+		toStdOut (bool, False) : return the stdout and stderr of the command. Removes all formatting in the process.
+		quiet (bool, False) : Do not print the output of the command.
 	"""
 	if checkComposeStackExists(args.stack):
-		subprocess.run(command)
+		if not toStdOut:
+			subprocess.run(command)
+		else:
+			out = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, encoding='UTF-8')
+			if not quiet:
+				print(out.stdout)
+			return out
 	else:
 		print(f'Docker compose file {composeStackFile(args.stack)} for stack {args.stack} is not present in the current directory.')
 		exit(2)
+
 
 def proceed(message: str, default=True) -> bool:
 	"""
@@ -112,7 +121,13 @@ def stop(args: argparse.Namespace):
 
 def status(args: argparse.Namespace):
 	command = ['docker', 'compose', '-f', composeStackFile(args.stack), 'ps']
-	runCommand(args, command)
+	if args.asJson:
+		command += ['--format', 'json']
+		out = runCommand(args, command, toStdOut=True, quiet=True)
+		# sends output of `docker compose ps status` to `jq` for formatting
+		subprocess.run('jq', input=out.stdout, encoding='UTF-8') #type:ignore
+	else:
+		runCommand(args, command)
 
 
 def execute(args: argparse.Namespace):
@@ -143,6 +158,15 @@ def logs(args: argparse.Namespace):
 
 	runCommand(args, command)
 
+
+
+def _validateRepo(url: str):
+	urlSplit = url.split('/')
+	if len(urlSplit) >= 5 and urlSplit[0] == ('http' or 'https'):
+		return True
+	else:
+		return False
+	
 
 
 def prep(args: argparse.Namespace):
@@ -187,11 +211,19 @@ def prep(args: argparse.Namespace):
 	
 	groupName = input('Enter the name of your group. It should be the name of this folder: ')
 	siteName = input("Enter the name of your site (ex: takethebus, spaceweather, etc.). Keep it simple, as this will be in your site's URL! : ")
+	
+	repoIsValid = False
+	while not repoIsValid:
+		gitRepo = input("Enter the full URL to your group's GitHub repo: ")
+		repoIsValid = _validateRepo(gitRepo)
+		if not repoIsValid: print('Repo is not a valid url.', end=' ')
+
 
 
 	print(f'\nGroup name: {groupName}')
 	print(f'Site name: {siteName}')
-	print(f'Django project folder: {pfName} {'(detected automatically)' if auto else ''}\n')
+	print(f'Django project folder: {pfName} {'(detected automatically)' if auto else ''}')
+	print(f'Git repo URL: {gitRepo}\n')
 
 	if proceed('Confirm these setttings?'):
 		envConf = dedent(
@@ -203,6 +235,9 @@ def prep(args: argparse.Namespace):
 			SITE_FOLDER={pfName}
 			"""
 		)
+		print('Cloning repo...')
+		subprocess.run(['git', 'clone', gitRepo, 'site'], stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
+
 		print("Writing configuration to '.env'...", end=' ')
 		with open(thisFolder + '/.env', 'w+') as envFile:
 			envFile.write(envConf)
@@ -254,8 +289,8 @@ def getArgs():
 
 	h = "Displays the current status of the specified stack."
 	parser_status = subparsers.add_parser('status', description=h, help=h)
-	parser_status.add_argument('-j', dest='asJson')
-	parser_status.add_argument('-r', dest='asRaw')
+	parser_status.add_argument('-j', dest='asJson', action='store_true', help='Output status as JSON data')
+	# parser_status.add_argument('-r', dest='asRaw', metavar='', help='Output status ')
 	parser_status.add_argument('stack', choices=stackChoices)
 	parser_status.set_defaults(func=status)
 
