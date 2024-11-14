@@ -162,8 +162,8 @@ def logs(args: argparse.Namespace):
 
 def _validateRepo(url: str):
 	urlSplit = url.split('/')
-	if len(urlSplit) >= 5 and urlSplit[0] == ('http:' or 'https:'):
-		return True
+	if len(urlSplit) >= 5:
+		return urlSplit[0] == 'http:' or urlSplit[0] == 'https:'
 	else:
 		return False
 	
