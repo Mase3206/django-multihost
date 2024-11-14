@@ -194,6 +194,12 @@ def prep(args: argparse.Namespace):
 	print('Found them all!\n')
 
 
+	repoIsValid = False
+	while not repoIsValid:
+		gitRepo = input("Enter the full URL to your group's GitHub repo: ")
+		repoIsValid = _validateRepo(gitRepo)
+		if not repoIsValid: print('Repo is not a valid url.', end=' ')
+
 	expectedProjectFolders = ['django', 'django_site', 'django_project', 'dj']
 	pfName = ''
 	found = False
@@ -211,13 +217,6 @@ def prep(args: argparse.Namespace):
 	
 	groupName = input('Enter the name of your group. It should be the name of this folder: ')
 	siteName = input("Enter the name of your site (ex: takethebus, spaceweather, etc.). Keep it simple, as this will be in your site's URL! : ")
-	
-	repoIsValid = False
-	while not repoIsValid:
-		gitRepo = input("Enter the full URL to your group's GitHub repo: ")
-		repoIsValid = _validateRepo(gitRepo)
-		if not repoIsValid: print('Repo is not a valid url.', end=' ')
-
 
 
 	print(f'\nGroup name: {groupName}')
