@@ -2,14 +2,14 @@ USER := $(shell id -un)
 CWD := $(shell pwd)
 
 help:
-	echo "$(USER)"
+	echo "User: $(USER)"
+	echo "CWD: $(CWD)"
 
-config: 
+groups: 
 	usermod -a -G docker $(USER)
 	groupadd classadmin
 	usermod -a -G classadmin $(USER)
 	echo "You'll need to restart for the group changes to take effect."
-
 
 install:
 	sudo dnf install -y python3.12 python3.12-pip jq
@@ -27,3 +27,7 @@ install:
 
 	sudo ln -s $(CWD)/create-group.sh /usr/local/bin/create-group
 #	sudo chown $(USER):classadmin /usr/local/bin/create-group
+
+remove:
+	sudo rm /usr/local/bin/create-group
+	sudo rm /usr/local/bin/deploy
