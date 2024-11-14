@@ -24,5 +24,5 @@ install:
 	sudo ln -s $(CWD)/deploy.py /usr/local/bin/deploy
 #	sudo chown $(USER):classadmin /usr/local/bin/deploy
 
-	sudo ln -s $(CWD)/create-group.sh /usr/local/sbin/create-group
+	sudo ln -s $(CWD)/create-group.sh /usr/local/bin/create-group
 #	sudo chown $(USER):classadmin /usr/local/bin/create-group
