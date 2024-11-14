@@ -15,7 +15,7 @@ group_name=$2
 group_folder=/django/$season/$group_name
 source_folder=/django/source
 
-files_to_link=(docker-compose.site.yml instructions.md deploy.py)
+files_to_link=(docker-compose.site.yml instructions.md)
 owner_user='trishduce'
 owner_group='classadmin'
 
@@ -29,14 +29,14 @@ fi; if [ -d $group_folder ]; then
 fi
 
 echo "Creating folder for $group_name"
-# mkdir $group_folder
+mkdir $group_folder
 
 
 for file in ${files_to_link[@]}; do
 	echo "Linking and setting permissions on $file"
 	ln -s $source_folder/$file $group_folder/$file
 
-	sudo chown $owner_user:$owner_group $group_folder/$file
+	# sudo chown $owner_user:$owner_group $group_folder/$file
 	# rwx to user and group, r-x for everyone else
-	sudo chmod 775 $group_folder/$file
+	# sudo chmod 775 $group_folder/$file
 done
