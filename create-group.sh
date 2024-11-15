@@ -5,14 +5,14 @@ set -e
 
 if [[ "$1" == "-h" ]] || [[ "$2" == "-h" ]] || [[ "$1" == "" ]] || [[ "$2" == "" ]]; then
 	echo "Error: missing arguments." 
-	echo "$0 season group_name"
+	echo "$0 term group_name"
 fi
 
 
-season=$1
+term=$1
 group_name=$2
 
-group_folder=/django/$season/$group_name
+group_folder=/django/$term/$group_name
 source_folder=/django/source
 
 files_to_link=(docker-compose.site.yml instructions.md)
@@ -20,11 +20,11 @@ owner_user='trishduce'
 owner_group='classadmin'
 
 
-if [ ! -d /django/$season ]; then
-	echo "The given season ($season) folder doesn't exist yet. Please create this manually."
+if [ ! -d /django/$term ]; then
+	echo "The given term ($term) folder doesn't exist yet. Please create this manually."
 	exit 1
 fi; if [ -d $group_folder ]; then
-	echo "The $group_name group already has a group folder in /django/$season."
+	echo "The $group_name group already has a group folder in /django/$term."
 	exit 1
 fi
 
