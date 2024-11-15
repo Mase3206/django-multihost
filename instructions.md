@@ -51,7 +51,7 @@ DATABASES = {
 		'PORT': '5432',
 	},
 
-	# SQLite3 database used for development and testing
+	# local SQLite database used for development and testing
 	'local': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
@@ -68,7 +68,7 @@ DATABASES['default'] = DATABASES[default_database]
 
 - Replace your static files settings with *exactly* this
 ```python
-# URL path to serve static files from; ex: '/group-3/static/'
+# URL path to serve static files from; ex: '/group1/static/'
 STATIC_URL = FORCE_SCRIPT_NAME + '/static/'
 # project static files location
 STATICFILES_DIRS = [ BASE_DIR / "static" ]
@@ -81,38 +81,40 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 ## Setting up the environment
 
-1. Use `scp` (**S**SH **C**o**p**y) to copy the contents your django site folder (the folder containing 'manage.py') into the 'sites' folder in your group's directory on the class VM.
+<!-- 1. Use `scp` (**S**SH **C**o**p**y) to copy the contents your django site folder (the folder containing 'manage.py') into the 'sites' folder in your group's directory on the class VM.
 	- Make sure to replace `SITE_FOLDER` and `GROUP_NAME` with the name of the django site folder and your group's name, respectively.
 	- Replace `netid` in `netid@csci258.cs.umt.edu` with your actual NetID.
 ```bash
 scp SITE_FOLDER/* netid@csci258.cs.umt.edu:/django/fall24/GROUP_NAME/site/*
-```
+``` -->
 
-2. Use SSH (**S**ecure **Sh**ell) to open a remote terminal into the class VM. Like above, replace `netid` with your actual NetID.
+1. Use SSH (**S**ecure **Sh**ell) to open a remote terminal into the class VM. Like above, replace `netid` with your actual NetID.
 ```bash
 ssh netid@csci258.cs.umt.edu
 ```
 
-3. Use `cd` to navigate to your group's directory. Like above, replace `GROUP_NAME` with your group's actual name.
+2. Use `cd` to navigate to your group's directory. Like above, replace `GROUP_NAME` with your group's actual name.
 ```bash
-cd /django/fall24/GROUP_NAME
+cd /django/TERM/GROUP_NAME
+# example:
+cd /django/fall24/group1
 ```
 
-4. Run the following command to set up your group's environment. It'll walk you through a couple steps.
+3. Run the following command to set up your group's environment. It'll walk you through a couple steps.
 ```bash
-python deploy.py prep
+deploy prep
 ```
 
 ## Deploying your site
 
 Thankfully, deployment is super simple. We've made a helpful script, 'deploy.py`, to simplify dealing with Docker Compose. Once you and your group have done everything above, run:
 ```bash
-python deploy.py start site
+deploy start site
 ```
 
 To see its status, run:
 ```bash
-python deploy.py status site
+deploy status site
 ```
 This displays the standard Docker Compose output style, as that's what's running under the hood. In fact, the command being run is:
 ```bash
@@ -121,7 +123,7 @@ docker compose -f docker-compose.site.yml ps
 
 To take down your site, run:
 ```bash
-python deploy.py stop site
+deploy stop site
 ```
 
 
@@ -131,25 +133,28 @@ Generally, commands can be run in either the Gunicorn or PostgreSQL Docker conta
 ```bash
 docker compose -f docker-compose.site.yml exec (container) (command) [args...]
 ```
-However, with 'deploy.py', it's a bit simpler:
+However, with `deploy`, it's a bit simpler:
 ```bash
-python deploy.py exec site (container) (command) [args...]
+deploy exec site (container) (command) [args...]
 ```
 
-Because your Django site is being served by a Docker container running the Gunicorn WSGI server, running commands with 'manage.py' is a little more complex. Without 'deploy.py', you would have to run:
+Because your Django site is being served by a Docker container running the Gunicorn WSGI server, running commands with 'manage.py' is a little more complex. Without `deploy`, you would have to run:
 ```bash
 docker compose -f docker-compose.site.yml exec gunicorn python manage.py (command) [args...]
 ```
-...which is gross. Instead, you can use 'deploy.py' like so:
+...which is gross. Instead, you can use 'manage.py' like so:
 
 ```bash
-python deploy.py manage [commands...]
+deploy manage [commands...]
 ```
 
 In this environment, it would likely only be used to create the superuser, as that is tied to the database, and the production database is different from the one used for local testing.
 
-> [!NOTE]
+<!-- > [!NOTE]
 > **Fun fact:** When using a POSIX shell (Bash, Zsh, etc., but not any Windows shell) and if the script is set up correctly, you can actually run scripts without explicitly calling their interpreter. Thus, the above command could be run as: 
 > ```bash
 > ./deploy.py manage
-> ```
+> ``` -->
+
+> [!NOTE]
+> **Fun fact:** The all-important `deploy` command is just a Python script. If you call the command `which deploy` in the terminal, you'll see it's located at /usr/local/bin/deploy, which is a symlink (kinda like a Windows short cut, just like a macOS alias) to /django/source/deploy.py. 
