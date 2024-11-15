@@ -276,7 +276,7 @@ def getArgs():
 
 	parser = argparse.ArgumentParser(description="Helpful script to manage a group's Gunicorn and PostgreSQL deployment for CSCI 258.", epilog="Author: Noah S. Roberts, 2024")
 
-	subparsers = parser.add_subparsers(required=True)
+	subparsers = parser.add_subparsers(required=True, metavar='action')
 	
 	h = "Starts the specified stack."
 	parser_start = subparsers.add_parser('start', description=h, help=h)
@@ -303,7 +303,7 @@ def getArgs():
 	parser_exec.add_argument('subargs', nargs='*')
 	parser_exec.set_defaults(func=execute)
 
-	h = "Run manage.py with the specified arguments"
+	h = "Run manage.py with the specified arguments."
 	parser_manage = subparsers.add_parser('manage', description=h, help=h)
 	parser_manage.add_argument('subargs', nargs='*')
 	parser_manage.set_defaults(func=manage)
@@ -312,7 +312,7 @@ def getArgs():
 	parser_prep = subparsers.add_parser('prep', description=h, help=h)
 	parser_prep.set_defaults(func=prep)
 
-	h = "Build the Docker image(s) used in the stack. Not used for group deployments."
+	h = "Build the Docker image(s) used in the stack."
 	parser_build = subparsers.add_parser('build', description=h, help=h)
 	parser_build.add_argument('stack', choices=stackChoices)
 	parser_build.add_argument('service', choices=serviceChoices, nargs='?')
