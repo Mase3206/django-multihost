@@ -15,6 +15,7 @@ install:
 	sudo dnf install -y python3.12 python3.12-pip jq
 	sudo update-alternatives --install /usr/bin/python3 python /usr/bin/python3.12 20
 	python -m pip install pyyaml
+	sudo docker run hello-world > /dev/null &2>1
 
 	sudo chown -R $(USER):classadmin ./*
 	sudo chmod 664 ./*

@@ -2,7 +2,9 @@
 required = [
 	'python3.12',
 	'python3.12-pip',
-	'jq'
+	'jq',
+	'git',
+	'docker',
 ]
 
 [pip3.12]
