@@ -5,7 +5,7 @@ services:
     # container_name: postgres
     image: postgres:17.0
     volumes:
-      - ./db:/var/lib/postgresql/data
+      - ./.volumes/db:/var/lib/postgresql/data
     environment:
       - "POSTGRES_PASSWORD=${POSTGRES_PASSWORD:?Please set the Postgres password in the '.env' file.}"
       - "POSTGRES_USER=pguser"
@@ -25,7 +25,7 @@ services:
       # retries: 10
     volumes:
       - ./site:/sites/django
-      - gunicorn:/run/www/django
+      - ./.volumes/gunicorn:/run/www/django
     labels:
       # - "traefik.enable=true"
       # set the hostname and path
