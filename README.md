@@ -18,6 +18,7 @@ This is a set of helpful wrapper scripts and Docker configurations to self-host 
 - make
 
 ### Python
+Make sure to install these system-wide!
 - PyYAML
 
 ## Installing
