@@ -24,7 +24,7 @@ This is a set of helpful wrapper scripts and Docker configurations to self-host 
 
 1. Clone this repo to /django/source
 ```bash
-git clone https://github.com/mase3206/web-dev-host.git /django/source
+git clone https://github.com/mase3206/django-multihost.git /django/source
 ```
 2. Navigate to /django/source via `cd`
 3. Run `sudo make groups` to set up the necessary groups for your user
