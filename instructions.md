@@ -31,7 +31,7 @@ INTERNAL_IPS = [
 MIDDLEWARE = [
 	# ... 
 	'django.middleware.security.SecurityMiddleware', # already exists
-    'whitenoise.middleware.WhiteNoiseMiddleware',    # this *must* go right after the one above
+	'whitenoise.middleware.WhiteNoiseMiddleware',    # this *must* go right after the one above
 	# ...
 ]
 ```
@@ -42,7 +42,7 @@ MIDDLEWARE = [
 ```python
 DATABASES = {
 	# PostgreSQL database used in production
-    'prod': {
+	'prod': {
 		'ENGINE': 'django.db.backends.postgresql',
 		'NAME': os.environ.get('POSTGRES_DB'),
 		'USER': os.environ.get('POSTGRES_USER'),
@@ -53,9 +53,9 @@ DATABASES = {
 
 	# local SQLite database used for development and testing
 	'local': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+		'ENGINE': 'django.db.backends.sqlite3',
+		'NAME': BASE_DIR / 'db.sqlite3',
+	}
 }
 
 
@@ -81,16 +81,11 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 ## Setting up the environment
 
-<!-- 1. Use `scp` (**S**SH **C**o**p**y) to copy the contents your django site folder (the folder containing 'manage.py') into the 'sites' folder in your group's directory on the class VM.
-	- Make sure to replace `SITE_FOLDER` and `GROUP_NAME` with the name of the django site folder and your group's name, respectively.
-	- Replace `netid` in `netid@csci258.cs.umt.edu` with your actual NetID.
-```bash
-scp SITE_FOLDER/* netid@csci258.cs.umt.edu:/django/fall24/GROUP_NAME/site/*
-``` -->
+More examples can be found on [the Wiki](https://github.com/Mase3206/django-multihost/wiki/Examples#groups).
 
-1. Use SSH (**S**ecure **Sh**ell) to open a remote terminal into the class VM. Like above, replace `netid` with your actual NetID.
+1. Use SSH (**S**ecure **Sh**ell) to open a remote terminal into the class VM. Like above, replace `username` with the username given to you.
 ```bash
-ssh netid@csci258.cs.umt.edu
+ssh username@csci258.cs.umt.edu
 ```
 
 2. Use `cd` to navigate to your group's directory. Like above, replace `GROUP_NAME` with your group's actual name.
@@ -118,6 +113,7 @@ deploy status site
 ```
 This displays the standard Docker Compose output style, as that's what's running under the hood. In fact, the command being run is:
 ```bash
+# the last command under the hood
 docker compose -f docker-compose.site.yml ps
 ```
 
@@ -131,6 +127,7 @@ deploy stop site
 
 Generally, commands can be run in either the Gunicorn or PostgreSQL Docker containers with the following syntax:
 ```bash
+# under the hood
 docker compose -f docker-compose.site.yml exec (container) (command) [args...]
 ```
 However, with `deploy`, it's a bit simpler:
@@ -140,6 +137,7 @@ deploy exec site (container) (command) [args...]
 
 Because your Django site is being served by a Docker container running the Gunicorn WSGI server, running commands with 'manage.py' is a little more complex. Without `deploy`, you would have to run:
 ```bash
+# under the hood
 docker compose -f docker-compose.site.yml exec gunicorn python manage.py (command) [args...]
 ```
 ...which is gross. Instead, you can use 'manage.py' like so:
