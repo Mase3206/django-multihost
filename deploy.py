@@ -9,8 +9,6 @@ import yaml
 import sys
 
 
-
-
 class DirectoryNotFoundError(FileNotFoundError): pass
 
 
@@ -281,12 +279,6 @@ def prep(args: argparse.Namespace):
 	else:
 		print('Canceling!')
 		exit(1)
-
-
-
-if __name__ == '__main__':
-	print('This file is not meant to be ran directly.')
-	exit(2)
 
 
 
