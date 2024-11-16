@@ -1,3 +1,5 @@
+name: shared
+
 services:
   traefik: 
     container_name: traefik

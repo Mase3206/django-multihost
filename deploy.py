@@ -78,8 +78,13 @@ def getArgs():
 	# ----------
 	# other miscellaneous commands
 	# ----------
-	h = "Prepare your group's folder for deployment."
+	h = "Prepare your group's folder for deployment. Parameters can optionally be passed directly from the command line, if desired."
 	parser_prep = subparsers.add_parser('prep', description=h, help=h)
+	parser_prep.add_argument('-r', dest='gitRepo', metavar='repo_url', help="Remote Git repo url to your Django site.")
+	parser_prep.add_argument('-g', dest='groupName', metavar='group_name', help="Name of your group. Should be the name of this folder.")
+	parser_prep.add_argument('-s', dest='siteName', metavar='site_name', help="Name of your site. Will be in the URL.")
+	parser_prep.add_argument('-p', dest='pfName', metavar='project_folder', help="Name of the Django project folder, ex: django_project, dj.")
+	parser_prep.add_argument('-y', dest='alwaysConfirm', action='store_true', help='Answer yes to all confirmation prompts.')
 	parser_prep.set_defaults(func=actions.prep)
 
 	h = "Display log output of the stack or one of its services."

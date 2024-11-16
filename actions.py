@@ -5,6 +5,7 @@ from os import getcwd, listdir, path
 from textwrap import dedent
 
 import yaml
+import sys
 
 
 
@@ -32,7 +33,7 @@ def checkComposeStackExists(stack: str) -> bool:
 		stack (str) : Docker Compose stack name
 	"""
 	composeFile = getcwd() + '/' + composeStackFile(stack)
-	print(f'Using {composeFile}')
+	sys.stderr.write(f'Using {composeFile}\n')
 	return path.exists(composeFile)
 
 def getStacksInDir() -> list[str]:
@@ -81,7 +82,7 @@ def runCommand(args: argparse.Namespace, command: list, toStdOut=False, quiet=Fa
 		exit(2)
 
 
-def proceed(message: str, default=True) -> bool:
+def proceed(args: argparse.Namespace, message: str, default=True) -> bool:
 	"""
 	Ask the user if they would like to proceed using the given message.
 
@@ -90,23 +91,26 @@ def proceed(message: str, default=True) -> bool:
 		message (str) : message to display to user
 		default (bool) : default option; True = yes, False = no
 	"""
-	if default == True:
-		choices = ' [Y/n] '
-	else:
-		choices = ' [y/N] '
-
-	resp = input(message + choices)
-
-	if default == True:
-		if resp.lower() == ('y' or 'yes' or ''):
-			return True
+	if not args.alwaysConfirm:
+		if default == True:
+			choices = ' [Y/n] '
 		else:
-			return False
-	else:
-		if resp.lower() == ('y' or 'yes'):
-			return True
+			choices = ' [y/N] '
+
+		resp = input(message + choices)
+
+		if default == True:
+			if resp.lower() == ('y' or 'yes' or ''):
+				return True
+			else:
+				return False
 		else:
-			return False
+			if resp.lower() == ('y' or 'yes'):
+				return True
+			else:
+				return False
+	else:
+		return args.alwaysConfirm
 
 
 
@@ -177,6 +181,13 @@ def prep(args: argparse.Namespace):
 	args.stack = 'site'
 	# command = ['docker']
 	thisFolder = getcwd()
+	thisHostnameOut = runCommand(args, ['hostnamectl', '--static'], toStdOut=True, quiet=True)
+	# thisHostnameOut = runCommand(args, ['echo', 'wowowowowowowow'], toStdOut=True, quiet=True)
+	if thisHostnameOut.stdout == '':
+		thisHostname = "this server's hostname"
+	else:
+		thisHostname = thisHostnameOut.stdout[:-1]
+
 	shouldExist_files = ['docker-compose.site.yml', 'instructions.md']
 	shouldExist_folders: list[str] = []
 
@@ -195,41 +206,59 @@ def prep(args: argparse.Namespace):
 	print('Found them all!\n')
 
 
-	repoIsValid = False
-	while not repoIsValid:
-		gitRepo = input("Enter the full URL to your group's GitHub repo: ")
-		repoIsValid = _validateRepo(gitRepo)
-		if not repoIsValid: print('Repo is not a valid url.', end=' ')
+	if not args.gitRepo:
+		repoIsValid = False
+		while not repoIsValid:
+			gitRepo = input("Enter the full URL to your group's GitHub repo: ")
+			repoIsValid = _validateRepo(gitRepo)
+			if not repoIsValid: print('Repo is not a valid url.', end=' ')
+	else:
+		gitRepo = args.gitRepo
 	
 	print('Cloning repo...')
-	subprocess.run(['git', 'clone', gitRepo, 'site'], stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
+	runCommand(args, ['rm', '-rf', 'site'], quiet=True)
+	subprocess.run(['git', 'clone', gitRepo, 'site'], stdout=subprocess.DEVNULL, stderr=subprocess.PIPE)
 
 	
-	expectedProjectFolders = ['django', 'django_site', 'django_project', 'dj']
-	pfName = ''
-	found = False
-	auto = False
-	for pf in expectedProjectFolders:
-		found = path.isdir(thisFolder + '/site/' + pf)
-		if found:
-			auto = True
-			pfName = pf
-			break
-	
-	if not found:
-		pfName = input('Django project folder not detected automatically in the site folder. Please enter the name of the Django project folder (ex: django_project, dj): ')
+	if not args.pfName:
+		expectedProjectFolders = ['django', 'django_site', 'django_project', 'dj']
+		pfName = ''
+		found = False
+		auto = False
+		for pf in expectedProjectFolders:
+			found = path.isdir(thisFolder + '/site/' + pf)
+			if found:
+				auto = True
+				pfName = pf
+				break
+		
+		if not found:
+			pfName = input('Django project folder not detected automatically in the site folder. Please enter the name of the Django project folder (ex: django_project, dj): ')
+			while not path.isdir(thisFolder + '/site/' + pfName):
+				pfName = input('Given Django project folder does not exist in the site folder. Please enter the name of the Django project folder (ex: django_project, dj): ')
+				
+	else:
+		pfName = args.pfName
 
 	
-	groupName = input('Enter the name of your group. It should be the name of this folder: ')
-	siteName = input("Enter the name of your site (ex: takethebus, spaceweather, etc.). Keep it simple, as this will be in your site's URL! : ")
+	if not args.groupName:
+		groupName = input('Enter the name of your group. It should be the name of this folder: ')
+	else:
+		groupName = args.groupName
+
+	if not args.siteName:
+		siteName = input("Enter the name of your site (ex: takethebus, spaceweather, etc.). Keep it simple, as this will be in your site's URL! : ")
+	else:
+		siteName = args.siteName
 
 
-	print(f'\nGroup name: {groupName}')
+	print(f'\n---\nGroup name: {groupName}')
 	print(f'Site name: {siteName}')
 	print(f'Django project folder: {pfName} {'(detected automatically)' if auto else ''}')
-	print(f'Git repo URL: {gitRepo}\n')
+	print(f'Git repo URL: {gitRepo}\n---\n')
 
-	if proceed('Confirm these setttings?'):
+	if proceed(args, 'Confirm these setttings?'):
+		postgresPassword = runCommand(args, ['pwgen', '32', '1'], toStdOut=True, quiet=True).stdout #type:ignore
 		envConf = dedent(
 			f"""\
 			GROUP_NAME={groupName}
@@ -237,6 +266,8 @@ def prep(args: argparse.Namespace):
 			SITE_NAME={siteName}
 			# may be called 'django', 'django_site', 'django_project', 'dj', etc.
 			SITE_FOLDER={pfName}
+
+			POSTGRES_PASSWORD={postgresPassword}
 			"""
 		)
 
@@ -245,7 +276,7 @@ def prep(args: argparse.Namespace):
 			envFile.write(envConf)
 		print('done!')
 
-		print("Make sure you add this server's hostname to the ALLOWED_HOSTS list in settings.py!")
+		print(f"Make sure you add {thisHostname} to the ALLOWED_HOSTS list in settings.py!")
 
 	else:
 		print('Canceling!')

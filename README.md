@@ -12,6 +12,7 @@ This is a set of helpful wrapper scripts and Docker configurations to self-host 
 - [jq](https://jqlang.github.io/jq/)
 - Git
 - [Docker CE](https://docs.docker.com/desktop/setup/install/linux/)
+- [pwgen](https://pkgs.org/search/?q=pwgen) - found in the EPEL repos in RHEL-based distros
 
 ### Python
 - PyYAML

@@ -5,6 +5,7 @@ required = [
 	'jq',
 	'git',
 	'docker',
+	'pwgen', # epel9
 ]
 
 [pip3.12]
