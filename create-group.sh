@@ -46,8 +46,8 @@ for group_name in "${groups[@]}"; do
 
 	done
 
-	sudo -R chown $owner_user:$owner_group $group_folder
+	sudo chown -R $owner_user:$owner_group $group_folder
 	# rwx to all
-	sudo -R chmod 777 $group_folder
+	sudo chmod -R 777 $group_folder
 	echo
 done
