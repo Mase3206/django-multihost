@@ -44,9 +44,9 @@ for group_name in "${groups[@]}"; do
 		echo "Linking and setting permissions on $file"
 		ln -s $source_folder/$file $group_folder/$file
 
-		# sudo chown $owner_user:$owner_group $group_folder/$file
+		chown $owner_user:$owner_group $group_folder/$file
 		# rwx to user and group, r-x for everyone else
-		# sudo chmod 775 $group_folder/$file
+		chmod 775 $group_folder/$file
 	done
 	echo
 done
