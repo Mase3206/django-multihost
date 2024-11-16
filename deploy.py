@@ -1,9 +1,8 @@
 #!/usr/bin/env python3.12
 
 import argparse
+
 import actions
-
-
 
 
 def getArgs():
@@ -51,7 +50,6 @@ def getArgs():
 	h = "Displays the current status of the specified stack."
 	parser_status = subparsers.add_parser('status', description=h, help=h)
 	parser_status.add_argument('-j', dest='asJson', action='store_true', help='Output status as JSON data')
-	# parser_status.add_argument('-r', dest='asRaw', metavar='', help='Output status ')
 	parser_status.add_argument('stack', choices=stackChoices)
 	parser_status.set_defaults(func=actions.status)
 
@@ -108,6 +106,22 @@ def main(args: argparse.Namespace):
 
 
 if __name__ == '__main__':
+	# make sure version 3.12+ is used
+	try:
+		import sys
+		assert sys.version_info >= (3, 12)
+		del sys
+	except AssertionError:
+		raise AssertionError('Python interpreter version is less than 3.12. Run deploy with at least Python 3.12.')
+	
+	# make sure PyYAML was installed system-wide
+	try:
+		import yaml
+		del yaml
+	except ModuleNotFoundError:
+		raise ModuleNotFoundError('Module "yaml" (from PyYAML) is not found. Was it installed system-wide?')
+
+
 	# collect the command line arguments
 	args = getArgs()
 	main(args)

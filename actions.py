@@ -1,19 +1,20 @@
 #!/usr/bin/env python3.12
 
-from argparse import Namespace
 import subprocess
+import sys
+from argparse import Namespace
 from os import getcwd, listdir, path
 from textwrap import dedent
 
 import yaml
-import sys
-
-
 
 
 class DirectoryNotFoundError(FileNotFoundError): pass
 
 
+# -----------------------------------------------------------------------------
+# HELPER FUNCTIONS
+# -----------------------------------------------------------------------------
 
 def composeStackFile(stack: str) -> str:
 	"""
@@ -25,6 +26,7 @@ def composeStackFile(stack: str) -> str:
 	"""
 	return f'docker-compose.{stack}.yml'
 
+
 def checkComposeStackExists(stack: str) -> bool:
 	"""
 	Check if the given stack's Docker Compose file exists.
@@ -34,11 +36,14 @@ def checkComposeStackExists(stack: str) -> bool:
 		stack (str) : Docker Compose stack name
 	"""
 	composeFile = getcwd() + '/' + composeStackFile(stack)
-	sys.stderr.write(f'Using {composeFile}\n')
+	sys.stderr.write(f'Using {composeFile}\n') # write to stderr instead of stdout
 	return path.exists(composeFile)
 
+
 def getStacksInDir() -> list[str]:
-	"""Get the Docker Compose files (stacks) in the current directory."""
+	"""
+	Get the Docker Compose files (stacks) in the current directory.
+	"""
 	listing = listdir(getcwd())
 	stacks = []
 
@@ -50,8 +55,11 @@ def getStacksInDir() -> list[str]:
 	
 	return stacks
 
+
 def getServicesInStack(stack: str) -> list[str]:
-	"""Get the service names defined in the given stack."""
+	"""
+	Get the service names defined in the given stack.
+	"""
 	with open(getcwd() + '/' + composeStackFile(stack), 'r') as f:
 		dcf: dict[str, dict[str, dict]] = yaml.safe_load(f)
 	
@@ -71,10 +79,13 @@ def runCommand(args: Namespace, command: list, toStdOut=False, quiet=False):
 		quiet (bool, False) : Do not print the output of the command.
 	"""
 	if checkComposeStackExists(args.stack):
+		# run normally
 		if not toStdOut:
 			subprocess.run(command)
+		# capture output
 		else:
 			out = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, encoding='UTF-8')
+			# do not print, if desired
 			if not quiet:
 				print(out.stdout)
 			return out
@@ -101,31 +112,48 @@ def proceed(args: Namespace, message: str, default=True) -> bool:
 		resp = input(message + choices)
 
 		if default == True:
+			# accept an empty newline as default yes
 			if resp.lower() == ('y' or 'yes' or ''):
 				return True
 			else:
 				return False
 		else:
+			# treat an empty newline as default no
 			if resp.lower() == ('y' or 'yes'):
 				return True
 			else:
 				return False
+			
+	# bypass if -y is passed
 	else:
 		return args.alwaysConfirm
 
 
 
+# -----------------------------------------------------------------------------
+# COMMAND ACTIONS
+# -----------------------------------------------------------------------------
+
 def start(args: Namespace):
+	"""
+	Start the specified stack.
+	"""
 	command = ['docker', 'compose', '-f', composeStackFile(args.stack), 'up', '-d']
 	runCommand(args, command)
 
 
 def stop(args: Namespace):
+	"""
+	Stop the specified stack.
+	"""
 	command = ['docker', 'compose', '-f', composeStackFile(args.stack), 'down']
 	runCommand(args, command)
 
 
 def status(args: Namespace):
+	"""
+	Get the status of the specified stack. If '-j' is passed, status will be printed as JSON data.
+	"""
 	command = ['docker', 'compose', '-f', composeStackFile(args.stack), 'ps']
 	if args.asJson:
 		command += ['--format', 'json']
@@ -137,17 +165,26 @@ def status(args: Namespace):
 
 
 def execute(args: Namespace):
+	"""
+	Execute a command in the given stack and service (container).
+	"""
 	command = ['docker', 'compose', '-f', composeStackFile(args.stack), 'exec', args.service, args.command] + args.subargs
 	runCommand(args, command)
 
 
 def manage(args: Namespace):
+	"""
+	Run manage.py in the group's Gunicorn server
+	"""
 	args.stack = 'site'
 	command = ['docker', 'compose', '-f', composeStackFile(args.stack), 'exec', 'gunicorn', 'python', 'manage.py'] + args.subargs
 	runCommand(args, command)
 
 
 def build(args: Namespace):
+	"""
+	Build the Docker image(s) used in the stack.
+	"""
 	command = ['docker', 'compose', '-f', composeStackFile(args.stack), 'build']
 	if args.service:
 		command.append(args.service)
@@ -156,6 +193,9 @@ def build(args: Namespace):
 
 
 def logs(args: Namespace):
+	"""
+	Display the logs of the given stack and, optionally, service. If args.follow == True, Docker will follow the log's output.
+	"""
 	command = ['docker', 'compose', '-f', composeStackFile(args.stack), 'logs']
 	if args.follow:
 		command.append('--follow')
@@ -167,6 +207,9 @@ def logs(args: Namespace):
 
 
 def _validateRepo(url: str):
+	"""
+	Used by prep to check if the repo URL is a valid http(s) Git url. Does not check if said URL actually resolves to anything.
+	"""
 	urlSplit = url.split('/')
 	if len(urlSplit) >= 5:
 		return urlSplit[0] == 'http:' or urlSplit[0] == 'https:'
@@ -179,15 +222,23 @@ def prep(args: Namespace):
 	"""
 	Makes sure all required files are in this folder, then creates the '.env' file containg settings for Docker Compose, Gunicorn, and PostgreSQL.
 	"""
+	
 	args.stack = 'site'
 	thisFolder = getcwd()
-	thisHostnameOut = runCommand(args, ['hostnamectl', '--static'], toStdOut=True, quiet=True)
 
-	if thisHostnameOut.stdout == '': #type:ignore
+	# get hostname
+	thisHostnameOut = runCommand(args, ['hostnamectl', '--static'], toStdOut=True, quiet=True)
+	if (
+		thisHostnameOut.stdout == ''  		#type:ignore
+		or thisHostnameOut.stdout == ' '  	#type:ignore
+		or thisHostnameOut.stdout == '\n' 	#type:ignore
+	): 
+		# found hostname is empty, setting to placeholder
 		thisHostname = "this server's hostname"
 	else:
 		thisHostname = thisHostnameOut.stdout[:-1] #type:ignore
 
+	# check files and folders
 	shouldExist_files = ['docker-compose.site.yml', 'instructions.md']
 	shouldExist_folders: list[str] = []
 
@@ -206,6 +257,7 @@ def prep(args: Namespace):
 	print('Found them all!\n')
 
 
+	# clone repo
 	if not args.gitRepo:
 		repoIsValid = False
 		while not repoIsValid:
@@ -220,6 +272,7 @@ def prep(args: Namespace):
 	subprocess.run(['git', 'clone', gitRepo, 'site'], stdout=subprocess.DEVNULL, stderr=subprocess.PIPE)
 
 	
+	# detect django project folder name
 	if not args.pfName:
 		expectedProjectFolders = ['django', 'django_site', 'django_project', 'dj']
 		pfName = ''
@@ -232,6 +285,7 @@ def prep(args: Namespace):
 				pfName = pf
 				break
 		
+		# set manually if detection fails
 		if not found:
 			pfName = input('Django project folder not detected automatically in the site folder. Please enter the name of the Django project folder (ex: django_project, dj): ')
 			while not path.isdir(thisFolder + '/site/' + pfName):
@@ -241,24 +295,30 @@ def prep(args: Namespace):
 		pfName = args.pfName
 
 	
+	# set group name
 	if not args.groupName:
 		groupName = input('Enter the name of your group. It should be the name of this folder: ')
 	else:
 		groupName = args.groupName
 
+
+	# set site name
 	if not args.siteName:
 		siteName = input("Enter the name of your site (ex: takethebus, spaceweather, etc.). Keep it simple, as this will be in your site's URL! : ")
 	else:
 		siteName = args.siteName
 
 
+	# review .env details before writing
 	print(f'\n---\nGroup name: {groupName}')
 	print(f'Site name: {siteName}')
 	print(f'Django project folder: {pfName} {'(detected automatically)' if auto else ''}')
 	print(f'Git repo URL: {gitRepo}\n---\n')
 
 	if proceed(args, 'Confirm these setttings?'):
+		# generate postgres password
 		postgresPassword = runCommand(args, ['pwgen', '32', '1'], toStdOut=True, quiet=True).stdout #type:ignore
+		# call dedent to remove any indentations in this multi-line f-string
 		envConf = dedent(
 			f"""\
 			GROUP_NAME={groupName}
@@ -271,6 +331,7 @@ def prep(args: Namespace):
 			"""
 		)
 
+		# write .env file
 		print("Writing configuration to '.env'...", end=' ')
 		with open(thisFolder + '/.env', 'w+') as envFile:
 			envFile.write(envConf)
