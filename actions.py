@@ -1,6 +1,6 @@
 #!/usr/bin/env python3.12
 
-import argparse
+from argparse import Namespace
 import subprocess
 from os import getcwd, listdir, path
 from textwrap import dedent
@@ -59,13 +59,13 @@ def getServicesInStack(stack: str) -> list[str]:
 	return services
 
 
-def runCommand(args: argparse.Namespace, command: list, toStdOut=False, quiet=False):
+def runCommand(args: Namespace, command: list, toStdOut=False, quiet=False):
 	"""
 	Check if the stack given via CLI exists, then run the given command list via `subprocess.run()`, printing an error if the stack does not exist.
 
 	Arguments
 	---------
-		args (argparse.Namespace) : parsed command-line arguments from `argparse`.
+		args (Namespace) : parsed command-line arguments from `argparse`.
 		command (list) : command list containing the program name and all arguments.
 		toStdOut (bool, False) : return the stdout and stderr of the command. Removes all formatting in the process.
 		quiet (bool, False) : Do not print the output of the command.
@@ -83,7 +83,7 @@ def runCommand(args: argparse.Namespace, command: list, toStdOut=False, quiet=Fa
 		exit(2)
 
 
-def proceed(args: argparse.Namespace, message: str, default=True) -> bool:
+def proceed(args: Namespace, message: str, default=True) -> bool:
 	"""
 	Ask the user if they would like to proceed using the given message.
 
@@ -115,17 +115,17 @@ def proceed(args: argparse.Namespace, message: str, default=True) -> bool:
 
 
 
-def start(args: argparse.Namespace):
+def start(args: Namespace):
 	command = ['docker', 'compose', '-f', composeStackFile(args.stack), 'up', '-d']
 	runCommand(args, command)
 
 
-def stop(args: argparse.Namespace):
+def stop(args: Namespace):
 	command = ['docker', 'compose', '-f', composeStackFile(args.stack), 'down']
 	runCommand(args, command)
 
 
-def status(args: argparse.Namespace):
+def status(args: Namespace):
 	command = ['docker', 'compose', '-f', composeStackFile(args.stack), 'ps']
 	if args.asJson:
 		command += ['--format', 'json']
@@ -136,18 +136,18 @@ def status(args: argparse.Namespace):
 		runCommand(args, command)
 
 
-def execute(args: argparse.Namespace):
+def execute(args: Namespace):
 	command = ['docker', 'compose', '-f', composeStackFile(args.stack), 'exec', args.service, args.command] + args.subargs
 	runCommand(args, command)
 
 
-def manage(args: argparse.Namespace):
+def manage(args: Namespace):
 	args.stack = 'site'
 	command = ['docker', 'compose', '-f', composeStackFile(args.stack), 'exec', 'gunicorn', 'python', 'manage.py'] + args.subargs
 	runCommand(args, command)
 
 
-def build(args: argparse.Namespace):
+def build(args: Namespace):
 	command = ['docker', 'compose', '-f', composeStackFile(args.stack), 'build']
 	if args.service:
 		command.append(args.service)
@@ -155,7 +155,7 @@ def build(args: argparse.Namespace):
 	runCommand(args, command)
 
 
-def logs(args: argparse.Namespace):
+def logs(args: Namespace):
 	command = ['docker', 'compose', '-f', composeStackFile(args.stack), 'logs']
 	if args.follow:
 		command.append('--follow')
@@ -175,7 +175,7 @@ def _validateRepo(url: str):
 	
 
 
-def prep(args: argparse.Namespace):
+def prep(args: Namespace):
 	"""
 	Makes sure all required files are in this folder, then creates the '.env' file containg settings for Docker Compose, Gunicorn, and PostgreSQL.
 	"""
