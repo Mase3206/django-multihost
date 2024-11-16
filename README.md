@@ -15,6 +15,7 @@ This is a set of helpful wrapper scripts and Docker configurations to self-host 
 - Git
 - [Docker CE](https://docs.docker.com/desktop/setup/install/linux/)
 - [pwgen](https://pkgs.org/search/?q=pwgen) - found in the EPEL repos in RHEL-based distros
+- make
 
 ### Python
 - PyYAML
@@ -26,10 +27,10 @@ This is a set of helpful wrapper scripts and Docker configurations to self-host 
 git clone https://github.com/mase3206/web-dev-host.git /django/source
 ```
 2. Navigate to /django/source via `cd`
-3. Run `make groups` to set up the necessary groups for your user
+3. Run `sudo make groups` to set up the necessary groups for your user
 	- adds your user to the 'docker' group
 	- creates and adds your user to the 'classadmin' group
-4. Run `make install` to:
+4. Run `sudo make install` to:
 	- set permissions
 	- create symlinks for 'deploy.py' to `deploy` and 'create-group.sh' to `create-group`
 
@@ -37,7 +38,7 @@ git clone https://github.com/mase3206/web-dev-host.git /django/source
 ## Removing
 
 1. Navigate to /django/source via `cd`
-2. Run `make remove` to:
+2. Run `sudo make remove` to:
 	- remove symlinks
 3. Delete the /django/source folder, if desired.
 
