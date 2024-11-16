@@ -6,9 +6,9 @@ help:
 	echo "CWD: $(CWD)"
 
 groups: 
-	usermod -a -G docker $(USER)
-	groupadd classadmin
-	usermod -a -G classadmin $(USER)
+	sudo usermod -a -G docker $(USER)
+	sudo groupadd classadmin
+	sudo usermod -a -G classadmin $(USER)
 	@echo "You'll need to restart for the group changes to take effect."
 
 install:

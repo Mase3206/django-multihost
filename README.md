@@ -28,10 +28,12 @@ Make sure to install these system-wide!
 git clone https://github.com/mase3206/django-multihost.git /django/source
 ```
 2. Navigate to /django/source via `cd`
-3. Run `sudo make groups` to set up the necessary groups for your user
+> [!WARNING]
+> Do not run the following commands as root! Doing so will result in broken permissions. Run them as yourself and enter your password when prompted.
+3. Run `make groups` to set up the necessary groups for your user
 	- adds your user to the 'docker' group
 	- creates and adds your user to the 'classadmin' group
-4. Run `sudo make install` to:
+4. Run `make install` to:
 	- set permissions
 	- create symlinks for 'deploy.py' to `deploy` and 'create-group.sh' to `create-group`
 
@@ -39,7 +41,7 @@ git clone https://github.com/mase3206/django-multihost.git /django/source
 ## Removing
 
 1. Navigate to /django/source via `cd`
-2. Run `sudo make remove` to:
+2. Run `make remove` to:
 	- remove symlinks
 3. Delete the /django/source folder, if desired.
 
