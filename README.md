@@ -1,7 +1,7 @@
 # Web Dev Host
 
 > [!NOTE]
-> **USERS!** See [instructions.md](docs/instructions.md) for deployment instructions.
+> **GROUPS!** See [instructions.md](docs/instructions.md) for deployment instructions.
 
 This is a set of helpful wrapper scripts and Docker configurations to self-host a multi-site Django server.
 
