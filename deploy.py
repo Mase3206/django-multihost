@@ -102,6 +102,7 @@ def main(args: argparse.Namespace):
 	try:
 		args.func(args)
 	except KeyboardInterrupt:
+		print()
 		exit(1)
 
 
