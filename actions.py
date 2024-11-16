@@ -227,16 +227,23 @@ def prep(args: Namespace):
 	thisFolder = getcwd()
 
 	# get hostname
-	thisHostnameOut = runCommand(args, ['hostnamectl', '--static'], toStdOut=True, quiet=True)
-	if (
-		thisHostnameOut.stdout == ''  		#type:ignore
-		or thisHostnameOut.stdout == ' '  	#type:ignore
-		or thisHostnameOut.stdout == '\n' 	#type:ignore
-	): 
-		# found hostname is empty, setting to placeholder
-		thisHostname = "this server's hostname"
-	else:
-		thisHostname = thisHostnameOut.stdout[:-1] #type:ignore
+	try:
+		thisHostnameOut = runCommand(args, ['hostnamectl', '--static'], toStdOut=True, quiet=True)
+		if (
+			thisHostnameOut.stdout == ''  		#type:ignore
+			or thisHostnameOut.stdout == ' '  	#type:ignore
+			or thisHostnameOut.stdout == '\n' 	#type:ignore
+		): 
+			# found hostname is empty, setting to placeholder
+			thisHostname = "this server's hostname"
+		else:
+			thisHostname = thisHostnameOut.stdout[:-1] #type:ignore
+	
+	# non-linux hosts (which you SHOULDN'T USE!) won't have the `hostnamectl` command. Some linux hosts might lack them, too
+	except FileNotFoundError:
+		thisHostnameOut = "this server's hostname"
+
+	
 
 	# check files and folders
 	shouldExist_files = ['docker-compose.site.yml', 'instructions.md']
