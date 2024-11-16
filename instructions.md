@@ -148,11 +148,5 @@ deploy manage [commands...]
 
 In this environment, it would likely only be used to create the superuser, as that is tied to the database, and the production database is different from the one used for local testing.
 
-<!-- > [!NOTE]
-> **Fun fact:** When using a POSIX shell (Bash, Zsh, etc., but not any Windows shell) and if the script is set up correctly, you can actually run scripts without explicitly calling their interpreter. Thus, the above command could be run as: 
-> ```bash
-> ./deploy.py manage
-> ``` -->
-
 > [!NOTE]
 > **Fun fact:** The all-important `deploy` command is just a Python script. If you call the command `which deploy` in the terminal, you'll see it's located at /usr/local/bin/deploy, which is a symlink (kinda like a Windows short cut, just like a macOS alias) to /django/source/deploy.py. 
