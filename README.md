@@ -1,4 +1,4 @@
-# Web Dev Host
+# Django MultiHost
 
 > [!NOTE]
 > **GROUPS!** See [instructions.md](docs/instructions.md) for deployment instructions.
