@@ -48,4 +48,4 @@ git clone https://github.com/mase3206/django-multihost.git /django/source
 
 ## Licensing
 
-This code is licensed under the GPLv3 license. See [LICENSE](./LICENSE) for more details.
+This code is licensed under the GPLv3 license. See [LICENSE](./LICENSE) for more details or [TL;DR Legal](https://www.tldrlegal.com/license/gnu-general-public-license-v3-gpl-3) for a rundown.
