@@ -5,6 +5,8 @@
 
 This is a set of helpful wrapper scripts and Docker configurations to self-host a multi-site Django server.
 
+**We have a wiki now!** It goes a bit more in depth than this README does, so [take a look at it](https://github.com/Mase3206/web-dev-host/wiki) if you're curious.
+
 ## Requirements
 ### System
 - Python 3.12+
@@ -28,7 +30,6 @@ git clone https://github.com/mase3206/web-dev-host.git /django/source
 	- adds your user to the 'docker' group
 	- creates and adds your user to the 'classadmin' group
 4. Run `make install` to:
-	- ensure dependencies are installed
 	- set permissions
 	- create symlinks for 'deploy.py' to `deploy` and 'create-group.sh' to `create-group`
 
