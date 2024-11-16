@@ -179,14 +179,13 @@ def prep(args: argparse.Namespace):
 	Makes sure all required files are in this folder, then creates the '.env' file containg settings for Docker Compose, Gunicorn, and PostgreSQL.
 	"""
 	args.stack = 'site'
-	# command = ['docker']
 	thisFolder = getcwd()
 	thisHostnameOut = runCommand(args, ['hostnamectl', '--static'], toStdOut=True, quiet=True)
-	# thisHostnameOut = runCommand(args, ['echo', 'wowowowowowowow'], toStdOut=True, quiet=True)
-	if thisHostnameOut.stdout == '':
+
+	if thisHostnameOut.stdout == '': #type:ignore
 		thisHostname = "this server's hostname"
 	else:
-		thisHostname = thisHostnameOut.stdout[:-1]
+		thisHostname = thisHostnameOut.stdout[:-1] #type:ignore
 
 	shouldExist_files = ['docker-compose.site.yml', 'instructions.md']
 	shouldExist_folders: list[str] = []
