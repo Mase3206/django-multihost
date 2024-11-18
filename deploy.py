@@ -59,6 +59,12 @@ def getArgs():
 	parser_build.add_argument('service', choices=serviceChoices, nargs='?')
 	parser_build.set_defaults(func=actions.build)
 
+	h = "Pull the latest Docker image(s) used in the stack."
+	parser_pull = subparsers.add_parser('pull', description=h, help=h)
+	parser_pull.add_argument('stack', choices=stackChoices)
+	parser_pull.add_argument('service', choices=serviceChoices, nargs='?')
+	parser_pull.set_defaults(func=actions.pull)
+
 	# ----------
 	# commands used for executing commands in the container
 	# ----------

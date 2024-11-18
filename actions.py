@@ -192,6 +192,17 @@ def build(args: Namespace):
 	runCommand(args, command)
 
 
+def pull(args: Namespace):
+	"""
+	Pull the latest Docker image(s) used in the stack.
+	"""
+	command = ['docker', 'compose', '-f', composeStackFile(args.stack), 'pull']
+	if args.service:
+		command.append(args.service)
+
+	runCommand(args, command)
+
+
 def logs(args: Namespace):
 	"""
 	Display the logs of the given stack and, optionally, service. If args.follow == True, Docker will follow the log's output.
