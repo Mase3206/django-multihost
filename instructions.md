@@ -2,13 +2,29 @@
 
 ## Preparing your Django project
 
-In your 'settings.py' file, add the following lines in the specified locations:
+In your 'settings.py' file, add these lines in the specified locations.
+
+> [!WARNING]
+> Make sure you copy this stuff ***exactly* how it is**. MultiHost expects these fields to be set as they are below. If you ever get an error about unknown/missing paths, invalid url configs, database stuff, or missing static files, check here.
+
+
+- Add these imports
+```python
+import os
+import yaml
+```
 
 
 - Place this after BASE_DIR is set
 ```python
 # make sure you import the `os` module!
 FORCE_SCRIPT_NAME = '/' + os.environ.get('SITE_NAME', '')
+```
+
+
+- Set DEBUG to False; this is a "production" environment, and we don't want our precious insider knowledge leaking out, now do we?
+```python
+DEBUG = False
 ```
 
 
@@ -37,8 +53,7 @@ MIDDLEWARE = [
 ```
 
 
-
-- Set your databases to *exactly* this
+- Replace your existing database configs with this (unless you have a third one used for a specific test case, then just leave that)
 ```python
 DATABASES = {
 	# PostgreSQL database used in production
@@ -56,10 +71,13 @@ DATABASES = {
 		'ENGINE': 'django.db.backends.sqlite3',
 		'NAME': BASE_DIR / 'db.sqlite3',
 	}
+
+	# any other configs would go down here
 }
 
 
 # defaults to local if not set in environment variable
+# environment variable is set by the Docker config
 default_database = os.environ.get('DJANGO_DATABASE', 'local')
 # sets detected database to default
 DATABASES['default'] = DATABASES[default_database]
@@ -78,6 +96,46 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 ```
 
+---
+### Secrets
+
+You'll need a way to store some secrets that shouldn't be committed to Git. While this is by no means the only way, this is the way I would start with.
+
+- In your 'settings.py', change the Django SECRET_KEY so it loads from a secrets file. Here's an example:
+```python
+# load the file
+try:
+	with open('secrets.yml', 'r') as f1:
+		secrets = yaml.safe_load(f1)
+		print('Found secrets file.')
+except FileNotFoundError:
+	print('Secrets file not found in this directory. Setting the `secrets` dict to empty.')
+	secrets = {}
+
+
+# try to grab the key from the secrets.yml file
+if (key := secrets.get('django', {}).get('secret_key', None)):
+	print('Using Django SECRET_KEY from secrets.')
+	SECRET_KEY = key
+else:
+	# SECURITY WARNING: keep the secret key used in production secret!
+	print('Secret key not found in secrets file. Using default (insecure!)')
+	SECRET_KEY = ... # default key
+del key
+```
+
+- Your secrets file (stored at the root of your repo) would then look like this:
+```yaml
+# secrets.yml
+django:
+  secret_key: super duper secret key
+```
+
+[This Stack Overflow post](https://stackoverflow.com/a/57678930/22601980) has a good way to quickly generate this key. 
+
+> [!IMPORTANT]
+> Remember to add this 'secrets.yml' file to your .gitignore before hitting commit! As soon as that key is committed, it's no longer a secret.
+
 
 ## Setting up the environment
 
@@ -95,14 +153,14 @@ cd /django/TERM/GROUP_NAME
 cd /django/fall24/group1
 ```
 
-3. Run the following command to set up your group's environment. It'll walk you through a couple steps.
+3. **Before doing *anything* else,** Run the following command to set up your group's environment. It'll walk you through a couple steps.
 ```bash
 deploy prep
 ```
 
 ## Deploying your site
 
-Thankfully, deployment is super simple. We've made a helpful script, 'deploy.py`, to simplify dealing with Docker Compose. Once you and your group have done everything above, run:
+Thankfully, deployment is super simple. I've made a helpful script, `deploy`, to simplify dealing with Docker Compose. Once you and your group have done everything above, run:
 ```bash
 deploy start site
 ```
@@ -149,4 +207,4 @@ deploy manage [commands...]
 In this environment, it would likely only be used to create the superuser, as that is tied to the database, and the production database is different from the one used for local testing.
 
 > [!NOTE]
-> **Fun fact:** The all-important `deploy` command is just a Python script. If you call the command `which deploy` in the terminal, you'll see it's located at /usr/local/bin/deploy, which is a symlink (kinda like a Windows short cut, just like a macOS alias) to /django/source/deploy.py. 
+> **Fun fact:** The all-important `deploy` command is just another Python script. If you run the command "`which deploy`" in the terminal, you'll see it's located at '/usr/local/bin/deploy', which is a symlink (kinda like a Windows short cut, just like a macOS alias) to '/django/source/deploy.py'. 
