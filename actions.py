@@ -177,7 +177,10 @@ def manage(args: Namespace):
 	Run manage.py in the group's Gunicorn server
 	"""
 	args.stack = 'site'
-	command = ['docker', 'compose', '-f', composeStackFile(args.stack), 'exec', 'gunicorn', 'python', 'manage.py'] + args.subargs
+	command = ['docker', 'compose', '-f', composeStackFile(args.stack), 'exec', 'gunicorn', 'python', 'manage.py', args.command]
+	if args.subargs:
+		command += args.subargs
+		
 	runCommand(args, command)
 
 

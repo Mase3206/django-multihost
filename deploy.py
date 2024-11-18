@@ -78,6 +78,7 @@ def getArgs():
 
 	h = "Run manage.py with the specified arguments."
 	parser_manage = subparsers.add_parser('manage', description=h, help=h)
+	parser_manage.add_argument('command', nargs=1)
 	parser_manage.add_argument('subargs', nargs='*')
 	parser_manage.set_defaults(func=actions.manage)
 
