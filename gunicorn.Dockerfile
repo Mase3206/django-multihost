@@ -16,5 +16,5 @@ EXPOSE 8000
 # CMD gunicorn $SITE_NAME.wsgi
 CMD cp -r /sites/django /run/www/ && \
 	pip install --root-user-action ignore -r ./requirements.txt && \
-	./manage.py migrate && \
+	python manage.py migrate && \
 	gunicorn --env DJANGO_SETTINGS_MODULE=$SITE_FOLDER.settings -b 0.0.0.0:8000 $SITE_FOLDER.wsgi
