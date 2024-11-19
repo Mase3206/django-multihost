@@ -28,8 +28,8 @@ services:
     volumes:
       - ./site:/sites/django
       - ./.volumes/gunicorn:/run/www/django
-    ports:
-      - "8000:8000"
+    # ports:
+      # - "8000:8000"
     networks:
       - traefik
       - default
