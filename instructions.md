@@ -11,7 +11,6 @@ In your 'settings.py' file, add these lines in the specified locations.
 - Add these imports
 ```python
 import os
-import yaml
 ```
 
 
@@ -103,32 +102,8 @@ You'll need a way to store some secrets that shouldn't be committed to Git. Whil
 
 - In your 'settings.py', change the Django SECRET_KEY so it loads from a secrets file. Here's an example:
 ```python
-# load the file
-try:
-	with open('secrets.yml', 'r') as f1:
-		secrets = yaml.safe_load(f1)
-		print('Found secrets file.')
-except FileNotFoundError:
-	print('Secrets file not found in this directory. Setting the `secrets` dict to empty.')
-	secrets = {}
-
-
-# try to grab the key from the secrets.yml file
-if (key := secrets.get('django', {}).get('secret_key', None)):
-	print('Using Django SECRET_KEY from secrets.')
-	SECRET_KEY = key
-else:
-	# SECURITY WARNING: keep the secret key used in production secret!
-	print('Secret key not found in secrets file. Using default (insecure!)')
-	SECRET_KEY = ... # default key
-del key
-```
-
-- Your secrets file (stored at the root of your repo) would then look like this:
-```yaml
-# secrets.yml
-django:
-  secret_key: super duper secret key
+# load the key; use default if key var not set
+SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-4$6@5&r4%kex2%me935-8q^=ep=ufnyv89&i7@dx^68924o2q#')
 ```
 
 [This Stack Overflow post](https://stackoverflow.com/a/57678930/22601980) has a good way to quickly generate this key. 
