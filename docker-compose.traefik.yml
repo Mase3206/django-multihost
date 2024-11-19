@@ -7,7 +7,7 @@ services:
     command:
       - --api.insecure=true
       - --providers.docker
-      - --log.level=INFO
+      - --log.level=DEBUG
       # - --providers.docker.exposedByDefault=false
       - --accessLog
     ports:
