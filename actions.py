@@ -5,6 +5,7 @@ import sys
 from argparse import Namespace
 from os import getcwd, listdir, path
 from textwrap import dedent
+import secrets
 
 import yaml
 
@@ -231,6 +232,14 @@ def _validateRepo(url: str):
 		return False
 	
 
+def _generateDjangoSecret() -> str:
+	"""
+	Local reconstruction of Django's django.core.management.utils.get_random_secret_key() function.
+	"""
+	chars = "abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*(-_=+)"
+	return "".join(secrets.choice(chars) for i in range(50))
+	
+
 
 def prep(args: Namespace):
 	"""
@@ -349,6 +358,8 @@ def prep(args: Namespace):
 			SITE_FOLDER={pfName}
 
 			POSTGRES_PASSWORD={postgresPassword}
+
+			SECRET_KEY={_generateDjangoSecret()}
 			"""
 		)
 
