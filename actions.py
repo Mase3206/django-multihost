@@ -169,7 +169,7 @@ def execute(args: Namespace):
 	"""
 	Execute a command in the given stack and service (container).
 	"""
-	command = ['docker', 'compose', '-f', composeStackFile(args.stack), 'exec', args.service, args.command] + args.subargs
+	command = ['docker', 'compose', '-f', composeStackFile(args.stack), 'exec', args.service] + args.command + args.subargs
 	runCommand(args, command)
 
 
@@ -178,7 +178,7 @@ def manage(args: Namespace):
 	Run manage.py in the group's Gunicorn server
 	"""
 	args.stack = 'site'
-	command = ['docker', 'compose', '-f', composeStackFile(args.stack), 'exec', 'gunicorn', 'python', 'manage.py', args.command]
+	command = ['docker', 'compose', '-f', composeStackFile(args.stack), 'exec', 'gunicorn', 'python', 'manage.py'] + args.command
 	if args.subargs:
 		command += args.subargs
 		
@@ -250,6 +250,7 @@ def prep(args: Namespace):
 	thisFolder = getcwd()
 
 	# get hostname
+	thisHostname = "this server's hostname"
 	try:
 		thisHostnameOut = runCommand(args, ['hostnamectl', '--static'], toStdOut=True, quiet=True)
 		if (
@@ -264,7 +265,7 @@ def prep(args: Namespace):
 	
 	# non-linux hosts (which you SHOULDN'T USE!) won't have the `hostnamectl` command. Some linux hosts might lack them, too
 	except FileNotFoundError:
-		thisHostnameOut = "this server's hostname"
+		pass
 
 	
 

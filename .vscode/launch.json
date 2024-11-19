@@ -7,7 +7,8 @@
 			"program": "${file}",
 			"console": "integratedTerminal",
 			"args": [
-				"${command:pickArgs}"
+				// "${command:pickArgs}"
+				"manage", "help"
 			]
 		}
 	]
