@@ -41,6 +41,7 @@ services:
       # strip the path away and continue
       - "traefik.http.routers.gunicorn-${GROUP_NAME}.middlewares=gunicorn-${GROUP_NAME}-stripprefix"
       - "traefik.http.middlewares.gunicorn-${GROUP_NAME}-stripprefix.stripprefix.prefixes=/${SITE_NAME}"
+      - "traefik.docker.network=traefik"
     environment:
       - "POSTGRES_USER=pguser"
       - "POSTGRES_PASSWORD=${POSTGRES_PASSWORD:?Please set the Postgres password in the '.env' file.}"
