@@ -26,10 +26,12 @@ services:
     volumes:
       - ./site:/sites/django
       - ./.volumes/gunicorn:/run/www/django
+    networks:
+      - traefik
     labels:
       # - "traefik.enable=true"
       # set the hostname and path
-      - "traefik.http.routers.gunicorn-${GROUP_NAME}.rule=Host(`localhost`)"
+      # - "traefik.http.routers.gunicorn-${GROUP_NAME}.rule=Host(`localhost`)"
       - "traefik.http.routers.gunicorn-${GROUP_NAME}.rule=PathPrefix(`/${SITE_NAME}`)"
       # strip the path away and continue
       - "traefik.http.routers.gunicorn-${GROUP_NAME}.middlewares=gunicorn-${GROUP_NAME}-stripprefix"
@@ -51,6 +53,7 @@ volumes:
   gunicorn: {}
 
 networks:
-  default:
+  traefik:
     name: traefik
     external: true
+    
