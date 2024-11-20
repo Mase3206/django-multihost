@@ -230,15 +230,7 @@ def _validateRepo(url: str):
 		return urlSplit[0] == 'http:' or urlSplit[0] == 'https:'
 	else:
 		return False
-	
 
-def _generateDjangoSecret() -> str:
-	"""
-	Local reconstruction of Django's django.core.management.utils.get_random_secret_key() function.
-	"""
-	chars = "abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*(-_=+)"
-	return "".join(secrets.choice(chars) for i in range(50))
-	
 
 
 def prep(args: Namespace):
@@ -349,6 +341,7 @@ def prep(args: Namespace):
 	if proceed(args, 'Confirm these setttings?'):
 		# generate postgres password
 		postgresPassword = runCommand(args, ['pwgen', '32', '1'], toStdOut=True, quiet=True).stdout #type:ignore
+		djangoSecret = runCommand(args, ['pwgen', '50', '1'], toStdOut=True, quiet=True).stdout #type:ignore
 		# call dedent to remove any indentations in this multi-line f-string
 		envConf = dedent(
 			f"""\
@@ -360,7 +353,7 @@ def prep(args: Namespace):
 
 			POSTGRES_PASSWORD={postgresPassword}
 
-			SECRET_KEY={_generateDjangoSecret()}
+			SECRET_KEY='{djangoSecret}'
 			"""
 		)
 
