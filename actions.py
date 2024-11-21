@@ -354,6 +354,7 @@ def prep(args: Namespace):
 			POSTGRES_PASSWORD={postgresPassword}
 
 			SECRET_KEY='{djangoSecret[:-1]}'
+   			DEBUG=False
 			"""
 		)
 

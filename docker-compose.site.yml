@@ -52,6 +52,7 @@ services:
       - "SITE_FOLDER=${SITE_FOLDER:-django}"
       - "SITE_NAME=${SITE_NAME:?Please set the site name in the '.env' file.}"
       - "SECRET_KEY=${SECRET_KEY:?Please add a secret key for Django.}"
+      - "DEBUG=${DEBUG}"
 
 
 volumes:
