@@ -2,11 +2,29 @@
 
 ## Preparing your Django project
 
+### requirements.txt
+
+Make sure Whitenoise v6.8 or higher is installed in your virtual environment and defined in your requirements.txt file. v6.7 does not serve static files at all ([see issue](https://github.com/Mase3206/django-multihost/issues/5)).
+
+```shell
+pip uninstall whitenoise
+pip install whitenoise~=6.8
+```
+
+
+```txt
+# requirements.txt
+# replace existing whitenoise line with this
+whitenoise~=6.8
+```
+
+
+### settings.py
+
 In your 'settings.py' file, add these lines in the specified locations.
 
 > [!WARNING]
 > Make sure you copy this stuff ***exactly* how it is**. MultiHost expects these fields to be set as they are below. If you ever get an error about unknown/missing paths, invalid url configs, database stuff, or missing static files, check here.
-
 
 - Add these imports
 ```python
@@ -96,7 +114,7 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 ```
 
 ---
-### Secrets
+#### Secrets
 
 You'll need a way to store some secrets that shouldn't be committed to Git. While this is by no means the only way, this is the way I would start with.
 
