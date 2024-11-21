@@ -18,8 +18,8 @@ services:
     # container_name: gunicorn
     image: cs-umt/gunicorn
     build:
-      dockerfile: ./gunicorn.Dockerfile
-      context: .
+      dockerfile: /django/source/gunicorn.Dockerfile
+      context: /django/source/
     # healthcheck:
       # test: ['CMD', 'curl', '-f', 'http://localhost:8000/']
       # interval: 5s
