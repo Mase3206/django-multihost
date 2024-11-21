@@ -21,6 +21,9 @@ This is a set of helpful wrapper scripts and Docker configurations to self-host 
 Make sure to install these system-wide!
 - PyYAML
 
+## Known Issues
+- Whitenoise version 6.8 or newer defined in the requirements.txt file is required for static files to be served correctly (or at all) - [Issue #5](https://github.com/Mase3206/django-multihost/issues/5)
+
 ## Installing
 
 1. Clone this repo to /django/source
