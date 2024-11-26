@@ -35,7 +35,7 @@ import os
 - Place this after BASE_DIR is set
 ```python
 # make sure you import the `os` module!
-FORCE_SCRIPT_NAME = '/' + os.environ.get('SITE_NAME', '')
+FORCE_SCRIPT_NAME = '/' + os.environ.get('SITE_NAME', '') if os.environ.get('SITE_NAME', '') != '' else ''
 ```
 
 
