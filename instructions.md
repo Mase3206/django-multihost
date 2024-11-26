@@ -124,10 +124,7 @@ You'll need a way to store some secrets that shouldn't be committed to Git. Whil
 SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-4$6@5&r4%kex2%me935-8q^=ep=ufnyv89&i7@dx^68924o2q#')
 ```
 
-[This Stack Overflow post](https://stackoverflow.com/a/57678930/22601980) has a good way to quickly generate this key. 
-
-> [!IMPORTANT]
-> Remember to add this 'secrets.yml' file to your .gitignore before hitting commit! As soon as that key is committed, it's no longer a secret.
+Don't worry about generating this key manually, as `deploy prep` generates it and adds it to '.env' for you.
 
 
 ## Setting up the environment
