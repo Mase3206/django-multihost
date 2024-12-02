@@ -21,17 +21,17 @@ def getArgs():
 	```
 	"""
 	# dynamically fetch available stacks and services available to control
-	stackChoices = actions.getStacksInDir()
+	stackChoices = actions.helpers.getStacksInDir()
 
 	serviceChoices: list[str] = []
 	for stack in stackChoices:
-		serviceChoices += actions.getServicesInStack(stack)
+		serviceChoices += actions.helpers.getServicesInStack(stack)
 	serviceChoices = list(set(serviceChoices))
 	
 
 	parser = argparse.ArgumentParser(description="Helpful script to manage a group's Gunicorn and PostgreSQL deployment for CSCI 258.", epilog="Author: Noah S. Roberts, 2024")
-	
-	parser.add_argument('-y', dest='alwaysConfirm', action='store_true', help='Answer yes to all confirmation prompts.')
+
+	parser.add_argument('-y', dest='alwaysConfirm', action='store_true', help='Answer yes to all confirmation prompts')
 
 	subparsers = parser.add_subparsers(required=True, metavar='action')
 

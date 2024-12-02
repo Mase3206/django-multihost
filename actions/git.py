@@ -1,4 +1,9 @@
-from .helpers import *
+'''
+Git actions
+'''
+
+# from .helpers import *
+from . import helpers
 
 from argparse import Namespace
 from os import getcwd, chdir, path
@@ -11,7 +16,7 @@ def _gitOp(args, command, folder=''):
 	
 	cwd = getcwd()
 	chdir(path.join(cwd, folder))
-	runCommand(args, command, ignoreStack=True)
+	helpers.runCommand(args, command, ignoreStack=True)
 	chdir(cwd)
 
 
@@ -22,7 +27,7 @@ def pull(args: Namespace):
 
 
 def hard_reset(args: Namespace): 
-	if proceed(
+	if helpers.proceed(
 		args,
 		"Are you sure you want to hard reset your repo? This will irreversably overwrite any and all changes made locally.",
 		default=False

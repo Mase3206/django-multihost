@@ -1,6 +1,10 @@
 #!/usr/bin/env python3.12
+'''
+Base actions.
+'''
 
-from .helpers import *
+# from .helpers import *
+from . import helpers
 
 
 import subprocess
@@ -9,55 +13,42 @@ from os import getcwd, path
 from textwrap import dedent
 
 
-
-
-
-# -----------------------------------------------------------------------------
-# HELPER FUNCTIONS
-# -----------------------------------------------------------------------------
-
-
-
-# -----------------------------------------------------------------------------
-# COMMAND ACTIONS
-# -----------------------------------------------------------------------------
-
 def start(args: Namespace):
 	"""
 	Start the specified stack.
 	"""
-	command = ['docker', 'compose', '-f', composeStackFile(args.stack), 'up', '-d']
-	runCommand(args, command)
+	command = ['docker', 'compose', '-f', helpers.composeStackFile(args.stack), 'up', '-d']
+	helpers.runCommand(args, command)
 
 
 def stop(args: Namespace):
 	"""
 	Stop the specified stack.
 	"""
-	command = ['docker', 'compose', '-f', composeStackFile(args.stack), 'down']
-	runCommand(args, command)
+	command = ['docker', 'compose', '-f', helpers.composeStackFile(args.stack), 'down']
+	helpers.runCommand(args, command)
 
 
 def status(args: Namespace):
 	"""
 	Get the status of the specified stack. If '-j' is passed, status will be printed as JSON data.
 	"""
-	command = ['docker', 'compose', '-f', composeStackFile(args.stack), 'ps']
+	command = ['docker', 'compose', '-f', helpers.composeStackFile(args.stack), 'ps']
 	if args.asJson:
 		command += ['--format', 'json']
-		out = runCommand(args, command, toStdOut=True, quiet=True)
+		out = helpers.runCommand(args, command, toStdOut=True, quiet=True)
 		# sends output of `docker compose ps status` to `jq` for formatting
 		subprocess.run('jq', input=out.stdout, encoding='UTF-8') #type:ignore
 	else:
-		runCommand(args, command)
+		helpers.runCommand(args, command)
 
 
 def execute(args: Namespace):
 	"""
 	Execute a command in the given stack and service (container).
 	"""
-	command = ['docker', 'compose', '-f', composeStackFile(args.stack), 'exec', args.service] + args.command + args.subargs
-	runCommand(args, command)
+	command = ['docker', 'compose', '-f', helpers.composeStackFile(args.stack), 'exec', args.service] + args.command + args.subargs
+	helpers.runCommand(args, command)
 
 
 def manage(args: Namespace):
@@ -65,46 +56,46 @@ def manage(args: Namespace):
 	Run manage.py in the group's Gunicorn server
 	"""
 	args.stack = 'site'
-	command = ['docker', 'compose', '-f', composeStackFile(args.stack), 'exec', 'gunicorn', 'python', 'manage.py'] + args.command
+	command = ['docker', 'compose', '-f', helpers.composeStackFile(args.stack), 'exec', 'gunicorn', 'python', 'manage.py'] + args.command
 	if args.subargs:
 		command += args.subargs
 		
-	runCommand(args, command)
+	helpers.runCommand(args, command)
 
 
 def build(args: Namespace):
 	"""
 	Build the Docker image(s) used in the stack.
 	"""
-	command = ['docker', 'compose', '-f', composeStackFile(args.stack), 'build']
+	command = ['docker', 'compose', '-f', helpers.composeStackFile(args.stack), 'build']
 	if args.service:
 		command.append(args.service)
 	
-	runCommand(args, command)
+	helpers.runCommand(args, command)
 
 
 def pull(args: Namespace):
 	"""
 	Pull the latest Docker image(s) used in the stack.
 	"""
-	command = ['docker', 'compose', '-f', composeStackFile(args.stack), 'pull']
+	command = ['docker', 'compose', '-f', helpers.composeStackFile(args.stack), 'pull']
 	if args.service:
 		command.append(args.service)
 
-	runCommand(args, command)
+	helpers.runCommand(args, command)
 
 
 def logs(args: Namespace):
 	"""
 	Display the logs of the given stack and, optionally, service. If args.follow == True, Docker will follow the log's output.
 	"""
-	command = ['docker', 'compose', '-f', composeStackFile(args.stack), 'logs']
+	command = ['docker', 'compose', '-f', helpers.composeStackFile(args.stack), 'logs']
 	if args.follow:
 		command.append('--follow')
 	if args.service:
 		command.append(args.service)
 
-	runCommand(args, command)
+	helpers.runCommand(args, command)
 
 
 
@@ -131,7 +122,7 @@ def prep(args: Namespace):
 	# get hostname
 	thisHostname = "this server's hostname"
 	try:
-		thisHostnameOut = runCommand(args, ['hostnamectl', '--static'], toStdOut=True, quiet=True)
+		thisHostnameOut = helpers.runCommand(args, ['hostnamectl', '--static'], toStdOut=True, quiet=True)
 		if (
 			thisHostnameOut.stdout == ''  		#type:ignore
 			or thisHostnameOut.stdout == ' '  	#type:ignore
@@ -161,7 +152,7 @@ def prep(args: Namespace):
 	
 	for folderName in shouldExist_folders:
 		if not path.isdir(thisFolder + '/' + folderName):
-			raise DirectoryNotFoundError(f'Required folder {folderName} is not present in group folder {thisFolder}.')
+			raise helpers.DirectoryNotFoundError(f'Required folder {folderName} is not present in group folder {thisFolder}.')
 		else:
 			print(f"  - found {folderName}/")
 	print('Found them all!\n')
@@ -178,7 +169,7 @@ def prep(args: Namespace):
 		gitRepo = args.gitRepo
 	
 	print('Cloning repo...')
-	runCommand(args, ['rm', '-rf', 'site'], quiet=True)
+	helpers.runCommand(args, ['rm', '-rf', 'site'], quiet=True)
 	subprocess.run(['git', 'clone', gitRepo, 'site'], stdout=subprocess.DEVNULL, stderr=subprocess.PIPE)
 
 	
@@ -225,10 +216,10 @@ def prep(args: Namespace):
 	print(f'Django project folder: {pfName} {'(detected automatically)' if auto else ''}')
 	print(f'Git repo URL: {gitRepo}\n---\n')
 
-	if proceed(args, 'Confirm these setttings?'):
+	if helpers.proceed(args, 'Confirm these setttings?'):
 		# generate postgres password
-		postgresPassword = runCommand(args, ['pwgen', '32', '1'], toStdOut=True, quiet=True).stdout #type:ignore
-		djangoSecret = runCommand(args, ['pwgen', '50', '1'], toStdOut=True, quiet=True).stdout #type:ignore
+		postgresPassword = helpers.runCommand(args, ['pwgen', '32', '1'], toStdOut=True, quiet=True).stdout #type:ignore
+		djangoSecret = helpers.runCommand(args, ['pwgen', '50', '1'], toStdOut=True, quiet=True).stdout #type:ignore
 		# call dedent to remove any indentations in this multi-line f-string
 		envConf = dedent(
 			f"""\
