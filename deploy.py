@@ -54,6 +54,11 @@ def getArgs():
 	parser_stop.add_argument('stack', choices=stackChoices)
 	parser_stop.set_defaults(func=actions.stop)
 
+	h = "Restarts the specified stack."
+	parser_stop = subparsers.add_parser('restart', description=h, help=h)
+	parser_stop.add_argument('stack', choices=stackChoices)
+	parser_stop.set_defaults(func=actions.restart)
+
 	h = "Displays the current status of the specified stack."
 	parser_status = subparsers.add_parser('status', description=h, help=h)
 	parser_status.add_argument('-j', dest='asJson', action='store_true', help='Output status as JSON data')

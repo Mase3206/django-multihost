@@ -32,6 +32,14 @@ def stop(args: Namespace):
 	helpers.runCommand(args, command)
 
 
+def restart(args: Namespace):
+	"""
+	Restart the specified stack.
+	"""
+	command = ['docker', 'compose', '-f', helpers.composeStackFile(args.stack), 'restart']
+	helpers.runCommand(args, command)
+
+
 def status(args: Namespace):
 	"""
 	Get the status of the specified stack. If '-j' is passed, status will be printed as JSON data.
