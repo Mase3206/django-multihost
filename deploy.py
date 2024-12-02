@@ -30,6 +30,8 @@ def getArgs():
 	
 
 	parser = argparse.ArgumentParser(description="Helpful script to manage a group's Gunicorn and PostgreSQL deployment for CSCI 258.", epilog="Author: Noah S. Roberts, 2024")
+	
+	parser.add_argument('-y', dest='alwaysConfirm', action='store_true', help='Answer yes to all confirmation prompts.')
 
 	subparsers = parser.add_subparsers(required=True, metavar='action')
 
@@ -91,7 +93,6 @@ def getArgs():
 	parser_prep.add_argument('-g', dest='groupName', metavar='group_name', help="Name of your group. Should be the name of this folder.")
 	parser_prep.add_argument('-s', dest='siteName', metavar='site_name', help="Name of your site. Will be in the URL.")
 	parser_prep.add_argument('-p', dest='pfName', metavar='project_folder', help="Name of the Django project folder, ex: django_project, dj.")
-	parser_prep.add_argument('-y', dest='alwaysConfirm', action='store_true', help='Answer yes to all confirmation prompts.')
 	parser_prep.set_defaults(func=actions.prep)
 
 	h = "Display log output of the stack or one of its services."
@@ -100,6 +101,23 @@ def getArgs():
 	parser_logs.add_argument('stack', choices=stackChoices)
 	parser_logs.add_argument('service', choices=serviceChoices, nargs='?')
 	parser_logs.set_defaults(func=actions.logs)
+
+
+	h = "Use a subset of Git commands to interact with your repository."
+	parser_git = subparsers.add_parser('git', description=h, help=h)
+	parser_git_subparsers = parser_git.add_subparsers(required=True, metavar='git action')
+
+	h = "Pull the latest changes your repository."
+	parser_git_pull = parser_git_subparsers.add_parser('pull', description=h, help=h)
+	parser_git_pull.add_argument('folder')
+	parser_git_pull.set_defaults(func=actions.git.pull)
+
+
+	h = "Hard reset your local clone, pulling the latest version of your repo. WARNING: This will overwrite any changes made locally!"
+	parser_git_reset = parser_git_subparsers.add_parser('reset', description=h, help=h)
+	parser_git_reset.add_argument('folder')
+	parser_git_reset.set_defaults(func=actions.git.hard_reset)
+
 
 	return parser.parse_args()
 
