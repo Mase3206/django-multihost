@@ -1,3 +1,4 @@
+#!/usr/bin/env python3.12
 '''
 Git actions
 '''
@@ -39,3 +40,8 @@ def hard_reset(args: Namespace):
 		_gitOp(args, command)
 	else:
 		print('Aborting.')
+
+
+if __name__ == '__main__':
+	print('This file is not meant to be ran directly.')
+	exit(2)
