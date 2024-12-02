@@ -35,7 +35,11 @@ import os
 - Place this after BASE_DIR is set
 ```python
 # make sure you import the `os` module!
-FORCE_SCRIPT_NAME = '/' + os.environ.get('SITE_NAME', '') if os.environ.get('SITE_NAME', '') != '' else ''
+FORCE_SCRIPT_NAME = (
+    "/" + os.environ.get("SITE_NAME", "")     # if the SITE_NAME env variable is set
+    if os.environ.get("SITE_NAME", "") != ""  # if not
+    else ""	                                  # set to nothing to let Django take over
+)
 ```
 
 
