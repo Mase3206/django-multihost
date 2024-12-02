@@ -2,6 +2,9 @@
 '''
 Base actions.
 '''
+__author__ = 'Noah S. Roberts'
+__license__ = 'GPLv3'
+
 
 # from .helpers import *
 from . import helpers

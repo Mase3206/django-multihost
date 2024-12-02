@@ -1,3 +1,10 @@
+'''
+Helper functions used by the actions module.
+'''
+__author__ = 'Noah S. Roberts'
+__license__ = 'GPLv3'
+
+
 import subprocess
 import sys
 from argparse import Namespace

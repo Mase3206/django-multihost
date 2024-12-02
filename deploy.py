@@ -1,4 +1,9 @@
 #!/usr/bin/env python3.12
+'''
+A Python wrapper for Docker Compose and Git to simplify deploying and managing multiple independent Django sites on one server.
+'''
+__author__ = 'Noah S. Roberts'
+__license__ = 'GPLv3'
 
 import argparse
 
@@ -124,6 +129,9 @@ def getArgs():
 
 
 def main(args: argparse.Namespace):
+	'''
+	The main entrypoint for the program.
+	'''
 	try:
 		args.func(args)
 	except KeyboardInterrupt:
