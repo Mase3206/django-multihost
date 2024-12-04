@@ -228,7 +228,7 @@ def prep(args: Namespace):
 
 	if helpers.proceed(args, 'Confirm these setttings?'):
 		# generate postgres password
-		postgresPassword = helpers.runCommand(args, ['pwgen', '32', '1'], toStdOut=True, quiet=True).stdout #type:ignore
+		postgresPassword = helpers.runCommand(args, ['pwgen', '32', '1'], toStdOut=True, quiet=True).stdout[:-1] #type:ignore
 		djangoSecret = helpers.runCommand(args, ['pwgen', '50', '1'], toStdOut=True, quiet=True).stdout #type:ignore
 		# call dedent to remove any indentations in this multi-line f-string
 		envConf = f"""\
