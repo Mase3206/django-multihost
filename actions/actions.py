@@ -243,7 +243,7 @@ def prep(args: Namespace):
 			POSTGRES_PASSWORD={postgresPassword}
 
 			SECRET_KEY={djangoSecret}
-   			DEBUG=False
+   			DEBUG=0  # set to '1' to enable debug mode
 			"""
 		)
 

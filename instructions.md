@@ -45,7 +45,10 @@ FORCE_SCRIPT_NAME = (
 
 - Set DEBUG to False; this is a "production" environment, and we don't want our precious insider knowledge leaking out, now do we?
 ```python
-DEBUG = False
+DEBUG = bool(int(os.environ.get(
+	'DEBUG', 
+	False  # or True, to fail unsafely
+)))
 ```
 
 
