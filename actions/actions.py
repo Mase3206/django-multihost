@@ -13,7 +13,6 @@ from . import helpers
 import subprocess
 from argparse import Namespace
 from os import getcwd, path
-from textwrap import dedent
 
 
 def start(args: Namespace):
@@ -232,20 +231,18 @@ def prep(args: Namespace):
 		postgresPassword = helpers.runCommand(args, ['pwgen', '32', '1'], toStdOut=True, quiet=True).stdout #type:ignore
 		djangoSecret = helpers.runCommand(args, ['pwgen', '50', '1'], toStdOut=True, quiet=True).stdout #type:ignore
 		# call dedent to remove any indentations in this multi-line f-string
-		envConf = dedent(
-			f"""\
-			GROUP_NAME={groupName}
+		envConf = f"""\
+GROUP_NAME={groupName}
 
-			SITE_NAME={siteName}
-			# may be called 'django', 'django_site', 'django_project', 'dj', etc.
-			SITE_FOLDER={pfName}
+SITE_NAME={siteName}
+# may be called 'django', 'django_site', 'django_project', 'dj', etc.
+SITE_FOLDER={pfName}
 
-			POSTGRES_PASSWORD={postgresPassword}
+POSTGRES_PASSWORD={postgresPassword}
 
-			SECRET_KEY={djangoSecret}
-   			DEBUG=0  # set to '1' to enable debug mode
-			"""
-		)
+SECRET_KEY={djangoSecret}
+DEBUG=0  # set to '1' to enable debug mode
+"""
 
 		# write .env file
 		print("Writing configuration to '.env'...", end=' ')
