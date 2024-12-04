@@ -6,7 +6,7 @@ RUN apt-get update && apt-get upgrade -y && \
 RUN mkdir /sites
 WORKDIR /run/www/django
 
-RUN pip install whitenoise~=6.8 packaging~=24.2 gunicorn~=23.0 psycopg~=3.2 "psycopg[binary]~=3.2"
+RUN pip install whitenoise~=6.8 packaging~=24.2 gunicorn~=23.0 psycopg~=3.2 "psycopg[binary]~=3.2" environs~=11.2
 
 # ENV PGSYSCONFDIR=/var/run/www/djsite
 # ENV DJANGO_GUNICORN=true

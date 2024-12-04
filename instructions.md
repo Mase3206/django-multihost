@@ -28,27 +28,34 @@ In your 'settings.py' file, add these lines in the specified locations.
 
 - Add these imports
 ```python
-import os
+# import os
+from environs import Env
+```
+
+- Initialize the `Env()` object
+```python
+env = Env()
+env.read_env()
 ```
 
 
 - Place this after BASE_DIR is set
 ```python
-# make sure you import the `os` module!
+# Make sure you've initialized the `env` object!
 FORCE_SCRIPT_NAME = (
-    "/" + os.environ.get("SITE_NAME", "")     # if the SITE_NAME env variable is set
-    if os.environ.get("SITE_NAME", "") != ""  # if not
-    else ""	                                  # set to nothing to let Django take over
+	'/' + env.str('SITE_NAME', default=None)  # if the SITE_NAME env variable is set
+	if not env.str('SITE_NAME', default=None) # if not
+	else ''  # set to nothing to let Django take over
 )
 ```
 
 
 - Set DEBUG to False; this is a "production" environment, and we don't want our precious insider knowledge leaking out, now do we?
 ```python
-DEBUG = bool(int(os.environ.get(
-	'DEBUG', 
-	False  # or True, to fail unsafely
-)))
+DEBUG = env.bool(
+	'DEBUG',
+	default=False  # or True, to fail unsafely
+)
 ```
 
 
@@ -83,9 +90,9 @@ DATABASES = {
 	# PostgreSQL database used in production
 	'prod': {
 		'ENGINE': 'django.db.backends.postgresql',
-		'NAME': os.environ.get('POSTGRES_DB'),
-		'USER': os.environ.get('POSTGRES_USER'),
-		'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
+		'NAME': env.str('POSTGRES_DB'),
+		'USER': env.str('POSTGRES_USER'),
+		'PASSWORD': env.str('POSTGRES_PASSWORD'),
 		'HOST': 'postgres',
 		'PORT': '5432',
 	},
@@ -102,7 +109,7 @@ DATABASES = {
 
 # defaults to local if not set in environment variable
 # environment variable is set by the Docker config
-default_database = os.environ.get('DJANGO_DATABASE', 'local')
+default_database = env.str('DJANGO_DATABASE', default='local')
 # sets detected database to default
 DATABASES['default'] = DATABASES[default_database]
 ```
@@ -128,7 +135,7 @@ You'll need a way to store some secrets that shouldn't be committed to Git. Whil
 - In your 'settings.py', change the Django SECRET_KEY so it loads from a secrets file. Here's an example:
 ```python
 # load the key; use default if key var not set
-SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-4$6@5&r4%kex2%me935-8q^=ep=ufnyv89&i7@dx^68924o2q#')
+SECRET_KEY = env.str('SECRET_KEY', default='django-insecure-4$6@5&r4%kex2%me935-8q^=ep=ufnyv89&i7@dx^68924o2q#')
 ```
 
 Don't worry about generating this key manually, as `deploy prep` generates it and adds it to '.env' for you.
