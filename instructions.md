@@ -1,5 +1,7 @@
 # Deployment Instructions
 
+Having issues? [This wiki page](https://github.com/Mase3206/django-multihost/wiki/Common-issues) might help.
+
 ## Preparing your Django project
 
 ### requirements.txt
@@ -90,9 +92,9 @@ DATABASES = {
 	# PostgreSQL database used in production
 	'prod': {
 		'ENGINE': 'django.db.backends.postgresql',
-		'NAME': env.str('POSTGRES_DB'),
-		'USER': env.str('POSTGRES_USER'),
-		'PASSWORD': env.str('POSTGRES_PASSWORD'),
+		'NAME': env.str('POSTGRES_DB', default=None),
+		'USER': env.str('POSTGRES_USER', default=None),
+		'PASSWORD': env.str('POSTGRES_PASSWORD', default=None),
 		'HOST': 'postgres',
 		'PORT': '5432',
 	},
