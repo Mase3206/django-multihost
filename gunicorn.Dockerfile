@@ -1,7 +1,7 @@
 FROM python:3.12.7-slim-bookworm
 
 RUN apt-get update && apt-get upgrade -y && \
-	apt-get install -y git curl
+	apt-get install -y git curl iputils-ping
 
 RUN mkdir /sites
 WORKDIR /run/www/django
