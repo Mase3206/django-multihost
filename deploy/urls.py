@@ -16,7 +16,16 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from django.conf import settings
+
+from debug_toolbar.toolbar import debug_toolbar_urls
+
+from .views import BasicHomepageView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+	path('', BasicHomepageView.as_view(), name='basic_home'),
 ]
+
+if settings.DEBUG == True:
+	urlpatterns += debug_toolbar_urls()
