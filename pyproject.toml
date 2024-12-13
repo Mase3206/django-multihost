@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "deploy"
+version = "2.0.0-alpha0"
+description = ""
+authors = ["Mase3206 <35052448+Mase3206@users.noreply.github.com>"]
+license = "GPLv3"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+psycopg = {extras = ["binary"], version = "^3.2.3"}
+django = "^5"
+whitenoise = "^6.8"
+environs = "^11.2.1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
