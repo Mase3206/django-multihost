@@ -167,5 +167,11 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
 
+
+# node stuff
+node_modules/
+from_bulma/
+
+
 # Misc.
 **/*.DS_Store
