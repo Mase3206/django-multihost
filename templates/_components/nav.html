@@ -1,0 +1,36 @@
+<nav class="nav" role="navigation" aria-label="main navigation">
+	<div class="navbar">
+		<div class="navbar-brand">
+			<a class="navbar-item" href="#">
+				Django MultiHost
+			</a>
+
+			<a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="baseNavbar">
+				<span aria-hidden="true"></span>
+				<span aria-hidden="true"></span>
+				<span aria-hidden="true"></span>
+			</a>
+		</div>
+		{% comment %} <input type="checkbox" id="navbar-menu" class="is-hidden"/> {% endcomment %}
+		<div id="baseNavbar" class="navbar-menu">
+			<div class="navbar-end">
+				<a class="navbar-item is-hidden-tablet">
+					<span class="icon"><i class="fa fa-home"></i></span> Home
+				</a>
+				<a class="navbar-item is-hidden-tablet">
+					<span class="icon"><i class="fa fa-table"></i></span> Links
+				</a>
+				<a class="navbar-item is-hidden-tablet">
+					<span class="icon"><i class="fa fa-info"></i></span> About
+				</a>
+				
+				<a class="navbar-item">
+					<span class="icon"><i class="fa fa-user"></i></span><span class="is-hidden-desktop"> Account</span>
+				</a>
+				<a class="navbar-item">
+					<span class="icon"><i class="fas fa-sign-out-alt"></i></span><span class="is-hidden-desktop"> Logout</span>
+				</a>
+			</div>
+		</div>
+	</div>
+</nav>

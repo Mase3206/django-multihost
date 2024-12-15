@@ -170,6 +170,7 @@ cython_debug/
 
 # node stuff
 node_modules/
+from_bulma/
 
 
 # Misc.
