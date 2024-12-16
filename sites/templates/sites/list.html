@@ -2,6 +2,12 @@
 
 {% block content %}
 
-<p>adflkajsdlfkjasldkfjalskjflaskj</p>
+{% for site in site_list %}
+<div class="card">
+	<div class="card-header"><a href="{% url 'sites:detail' pk=site.pk %}" class="card-header-title">{{ site.name }}</a></div>
+	<div class="card-content"><div class="content">Content</div></div>
+</div>
+<br />
+{% endfor %}
 
 {% endblock content %}

@@ -18,8 +18,12 @@
 			<section class="main-content columns is-fullheight">
 				{% include "_components/sidebar.html" %}
 
-				{% block content %}
-				{% endblock content %}
+				<div class="container column">
+					<div class="section">
+						{% block content %}
+						{% endblock content %}
+					</div>
+				</div>
 			</section>
 		</div>
 	</body>

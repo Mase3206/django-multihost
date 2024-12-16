@@ -1,22 +1,24 @@
-<aside class="menu column is-2 is-narrow-mobile is-fullheight section is-hidden-mobile">
+<aside class="menu column is-narrow is-fullheight section is-hidden-mobile">
 	<p class="menu-label is-hidden-touch">Navigation</p>
+
+	{% with request.resolver_match.url_name as url_name and request.resolver_match.app_name as app_name %}
 	<ul class="menu-list">
 		<li>
-			<a href="#" class="">
+			<a href="/" class="{% if url_name == 'home' %}is-active{% endif %}">
 				<span class="icon"><i class="fa fa-home"></i></span> Home
 			</a>
 		</li>
 
 		<li>
-			<a href="{% url deploy:list %}" class="is-active">
+			<a href="{% url 'sites:list' %}" class="{% if app_name|add:':'|add:url_name == 'sites:list' %}is-active{% endif %}">
 				<span class="icon"><i class="fa fa-table"></i></span> Sites
 			</a>
 
 			<ul>
-				{% for site in sites %}
+				{% for site in all_sites %}
 				<li>
-					<a href="{% site %}">
-						<span class="icon is-small"><i class="fa fa-link"></i></span> {{ site.name }}
+					<a href="{% url "sites:detail" pk=site.pk %}" class="{% if site.pk == current_pk %}is-active{% endif %}">
+						{{ site.name }}
 					</a>
 				</li>
 				{% endfor %}
@@ -29,4 +31,5 @@
 			</a>
 		</li>
 	</ul>
+	{% endwith %}
 </aside>

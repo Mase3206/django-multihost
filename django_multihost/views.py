@@ -1,5 +1,7 @@
-from django.views.generic import TemplateView
+from django.views.generic import ListView
+from sites.models import Site
 
 
-class BasicHomepageView(TemplateView):
-	template_name = 'base.html'
+class HomepageView(ListView):
+	model = Site
+	template_name = 'home.html'
