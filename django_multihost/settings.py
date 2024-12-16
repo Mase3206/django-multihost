@@ -48,6 +48,8 @@ INSTALLED_APPS = [
     # -- 3rd-party -- #
 	'debug_toolbar',
 	'bulma',
+	# 'revproxy.apps.RevProxyConfig',
+	# 'proxy',
 	
     # -- Project -- #
 	'sites',
@@ -146,5 +148,9 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-PROTOCOL = 'http'
+
+# These will need to be adjusted upon deployment
+HTTPS = False
 HOSTNAME = 'localhost:8000'
+
+DEPLOYMENT_START_PORT = 8000
