@@ -42,6 +42,9 @@ INSTALLED_APPS = [
     # -- 3rd-party -- #
 	'debug_toolbar',
 	'bulma',
+	
+    # -- Project -- #
+	'sites',
 ]
 
 MIDDLEWARE = [
@@ -55,7 +58,7 @@ MIDDLEWARE = [
 	'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
-ROOT_URLCONF = 'multihost.urls'
+ROOT_URLCONF = 'django_multihost.urls'
 
 TEMPLATES = [
     {
@@ -73,7 +76,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'multihost.wsgi.application'
+WSGI_APPLICATION = 'django_multihost.wsgi.application'
 
 
 # Database

@@ -14,11 +14,11 @@
 		{% comment %} <input type="checkbox" id="navbar-menu" class="is-hidden"/> {% endcomment %}
 		<div id="baseNavbar" class="navbar-menu">
 			<div class="navbar-end">
-				<a class="navbar-item is-hidden-tablet">
+				<a href="/" class="navbar-item is-hidden-tablet">
 					<span class="icon"><i class="fa fa-home"></i></span> Home
 				</a>
-				<a class="navbar-item is-hidden-tablet">
-					<span class="icon"><i class="fa fa-table"></i></span> Links
+				<a href="{% url deploy:list %}" class="navbar-item is-hidden-tablet">
+					<span class="icon"><i class="fa fa-table"></i></span> Sites
 				</a>
 				<a class="navbar-item is-hidden-tablet">
 					<span class="icon"><i class="fa fa-info"></i></span> About

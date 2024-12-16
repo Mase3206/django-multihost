@@ -28,7 +28,7 @@ Make sure to install these system-wide!
 
 1. Clone this repo to /django/source
 ```bash
-git clone https://github.com/mase3206/django-multihost.git /django/source
+git clone https://github.com/mase3206/django-django_multihost.git /django/source
 ```
 2. Navigate to /django/source via `cd`
 > [!WARNING]

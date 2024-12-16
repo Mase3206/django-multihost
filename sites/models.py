@@ -7,3 +7,6 @@ class Site(models.Model):
 	
 	remote_repo = models.URLField(blank=False, null=False)
 	# use_bundled_db = models.BooleanField(blank=False)
+
+	def __str__(self) -> str:
+		return f'{self.name}'
