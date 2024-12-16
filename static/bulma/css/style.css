@@ -2931,9 +2931,7 @@ html {
   overflow-x: var(--bulma-body-overflow-x);
   overflow-y: var(--bulma-body-overflow-y);
   text-rendering: var(--bulma-body-rendering);
-  -webkit-text-size-adjust: 100%;
-     -moz-text-size-adjust: 100%;
-          text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 article,
@@ -3005,9 +3003,7 @@ a strong {
 }
 
 button {
-  -webkit-appearance: none;
-     -moz-appearance: none;
-          appearance: none;
+  appearance: none;
   background: none;
   border: none;
   color: inherit;
@@ -3139,9 +3135,7 @@ table th {
 .pagination-ellipsis, .file-cta,
 .file-name, .select select, .input, .textarea, .button {
   align-items: center;
-  -webkit-appearance: none;
-     -moz-appearance: none;
-          appearance: none;
+  appearance: none;
   border-color: transparent;
   border-style: solid;
   border-width: var(--bulma-control-border-width);
@@ -3167,9 +3161,7 @@ table th {
   --bulma-delete-background-l: 0%;
   --bulma-delete-background-alpha: 0.5;
   --bulma-delete-color: var(--bulma-white);
-  -webkit-appearance: none;
-     -moz-appearance: none;
-          appearance: none;
+  appearance: none;
   background-color: hsla(var(--bulma-scheme-h), var(--bulma-scheme-s), var(--bulma-delete-background-l), var(--bulma-delete-background-alpha));
   border: none;
   border-radius: var(--bulma-radius-rounded);
@@ -3218,9 +3210,7 @@ table th {
 .navbar-burger, .menu-list a,
 .menu-list button,
 .menu-list .menu-item {
-  -webkit-appearance: none;
-     -moz-appearance: none;
-          appearance: none;
+  appearance: none;
   background: none;
   border: none;
   color: inherit;
@@ -3237,6 +3227,7 @@ table th {
   -webkit-touch-callout: none;
   -webkit-user-select: none;
   -moz-user-select: none;
+  -ms-user-select: none;
   user-select: none;
 }
 
@@ -3816,8 +3807,7 @@ a.box:active {
   background-color: transparent;
   border-color: transparent;
   color: var(--bulma-button-text-color);
-  -webkit-text-decoration: var(--bulma-button-text-decoration);
-          text-decoration: var(--bulma-button-text-decoration);
+  text-decoration: var(--bulma-button-text-decoration);
 }
 
 .button.is-text:hover, .button.is-text.is-hovered {
@@ -3840,14 +3830,12 @@ a.box:active {
   border-color: var(--bulma-button-ghost-border-color);
   box-shadow: none;
   color: var(--bulma-button-ghost-color);
-  -webkit-text-decoration: var(--bulma-button-ghost-decoration);
-          text-decoration: var(--bulma-button-ghost-decoration);
+  text-decoration: var(--bulma-button-ghost-decoration);
 }
 
 .button.is-ghost:hover, .button.is-ghost.is-hovered {
   color: var(--bulma-button-ghost-hover-color);
-  -webkit-text-decoration: var(--bulma-button-ghost-hover-decoration);
-          text-decoration: var(--bulma-button-ghost-hover-decoration);
+  text-decoration: var(--bulma-button-ghost-hover-decoration);
 }
 
 .button.is-small {
@@ -4227,9 +4215,7 @@ a.box:active {
   --bulma-delete-background-l: 0%;
   --bulma-delete-background-alpha: 0.5;
   --bulma-delete-color: var(--bulma-white);
-  -webkit-appearance: none;
-     -moz-appearance: none;
-          appearance: none;
+  appearance: none;
   background-color: hsla(var(--bulma-scheme-h), var(--bulma-scheme-s), var(--bulma-delete-background-l), var(--bulma-delete-background-alpha));
   border: none;
   border-radius: var(--bulma-radius-rounded);
@@ -4895,9 +4881,7 @@ div.icon-text {
 }
 
 .progress {
-  -webkit-appearance: none;
-     -moz-appearance: none;
-          appearance: none;
+  appearance: none;
   border: none;
   border-radius: var(--bulma-progress-border-radius);
   display: block;
@@ -7018,9 +7002,7 @@ button.tag:active,
 }
 
 .card-header-icon {
-  -webkit-appearance: none;
-     -moz-appearance: none;
-          appearance: none;
+  appearance: none;
   background: none;
   border: none;
   color: inherit;
@@ -7955,9 +7937,7 @@ body.has-navbar-fixed-bottom {
 
 .navbar-burger {
   align-items: center;
-  -webkit-appearance: none;
-     -moz-appearance: none;
-          appearance: none;
+  appearance: none;
   background: none;
   border: none;
   border-radius: var(--bulma-burger-border-radius);
@@ -10568,8 +10548,7 @@ label.panel-block:hover {
   --bulma-grid-cell-row-span: 1;
   display: grid;
   gap: var(--bulma-grid-gap);
-  -moz-column-gap: var(--bulma-grid-column-gap, var(--bulma-grid-gap));
-       column-gap: var(--bulma-grid-column-gap, var(--bulma-grid-gap));
+  column-gap: var(--bulma-grid-column-gap, var(--bulma-grid-gap));
   row-gap: var(--bulma-grid-row-gap, var(--bulma-grid-gap));
   grid-template-columns: repeat(auto-fit, minmax(var(--bulma-grid-column-min), 1fr));
   grid-template-rows: auto;
@@ -21701,88 +21680,71 @@ has-background-danger.is-hoverable:active {
 }
 
 .is-column-gap-0 {
-  -moz-column-gap: 0rem !important;
-       column-gap: 0rem !important;
+  column-gap: 0rem !important;
 }
 
 .is-column-gap-0\.5 {
-  -moz-column-gap: 0.25rem !important;
-       column-gap: 0.25rem !important;
+  column-gap: 0.25rem !important;
 }
 
 .is-column-gap-1 {
-  -moz-column-gap: 0.5rem !important;
-       column-gap: 0.5rem !important;
+  column-gap: 0.5rem !important;
 }
 
 .is-column-gap-1\.5 {
-  -moz-column-gap: 0.75rem !important;
-       column-gap: 0.75rem !important;
+  column-gap: 0.75rem !important;
 }
 
 .is-column-gap-2 {
-  -moz-column-gap: 1rem !important;
-       column-gap: 1rem !important;
+  column-gap: 1rem !important;
 }
 
 .is-column-gap-2\.5 {
-  -moz-column-gap: 1.25rem !important;
-       column-gap: 1.25rem !important;
+  column-gap: 1.25rem !important;
 }
 
 .is-column-gap-3 {
-  -moz-column-gap: 1.5rem !important;
-       column-gap: 1.5rem !important;
+  column-gap: 1.5rem !important;
 }
 
 .is-column-gap-3\.5 {
-  -moz-column-gap: 1.75rem !important;
-       column-gap: 1.75rem !important;
+  column-gap: 1.75rem !important;
 }
 
 .is-column-gap-4 {
-  -moz-column-gap: 2rem !important;
-       column-gap: 2rem !important;
+  column-gap: 2rem !important;
 }
 
 .is-column-gap-4\.5 {
-  -moz-column-gap: 2.25rem !important;
-       column-gap: 2.25rem !important;
+  column-gap: 2.25rem !important;
 }
 
 .is-column-gap-5 {
-  -moz-column-gap: 2.5rem !important;
-       column-gap: 2.5rem !important;
+  column-gap: 2.5rem !important;
 }
 
 .is-column-gap-5\.5 {
-  -moz-column-gap: 2.75rem !important;
-       column-gap: 2.75rem !important;
+  column-gap: 2.75rem !important;
 }
 
 .is-column-gap-6 {
-  -moz-column-gap: 3rem !important;
-       column-gap: 3rem !important;
+  column-gap: 3rem !important;
 }
 
 .is-column-gap-6\.5 {
-  -moz-column-gap: 3.25rem !important;
-       column-gap: 3.25rem !important;
+  column-gap: 3.25rem !important;
 }
 
 .is-column-gap-7 {
-  -moz-column-gap: 3.5rem !important;
-       column-gap: 3.5rem !important;
+  column-gap: 3.5rem !important;
 }
 
 .is-column-gap-7\.5 {
-  -moz-column-gap: 3.75rem !important;
-       column-gap: 3.75rem !important;
+  column-gap: 3.75rem !important;
 }
 
 .is-column-gap-8 {
-  -moz-column-gap: 4rem !important;
-       column-gap: 4rem !important;
+  column-gap: 4rem !important;
 }
 
 .is-row-gap-0 {
@@ -23363,6 +23325,20 @@ html, body, #app {
   #menu-toggle:checked + .nav-menu {
     display: block;
   }
+}
+ul.site-links {
+  list-style: none !important;
+  margin-left: 0px;
+  color: #666;
+}
+
+ul.site-links > li > a {
+  text-decoration: underline;
+  color: #666;
+}
+
+ul.site-links > li > a:hover {
+  text-decoration: none;
 }
 
 /*# sourceMappingURL=style.css.map */

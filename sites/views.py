@@ -1,4 +1,4 @@
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, RedirectView, View
 from .models import Site
 
 # Create your views here.
@@ -15,3 +15,8 @@ class SiteDetailView(DetailView):
 		context = super().get_context_data(**kwargs)
 		context['current_pk'] = self.kwargs.get('pk')
 		return context
+
+
+class SiteDeploymentView(View):
+	# url = ''
+	pass

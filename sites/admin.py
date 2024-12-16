@@ -9,5 +9,11 @@ class SiteAdmin(admin.ModelAdmin):
 		'name',
 		'path',
 		'remote_repo',
+		'description',
+		'description_brief',
 	]
-	list_display = fields
+	list_display = [
+		'name',
+		'path',
+		'remote_repo',
+	]

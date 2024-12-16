@@ -8,21 +8,23 @@
 		<title>Document</title>
 
 		{% font_awesome %}
-		<link rel="stylesheet" href="{% static 'bulma/css/style.min.css' %}" />
+		<link rel="stylesheet" href="{% static 'bulma/css/style.css' %}" />
 	</head>
 
 
 	<body>
 		<div id="app">
 			{% include "_components/nav.html" %}
-			<section class="main-content columns is-fullheight">
+			<section class="columns is-fullheight">
 				{% include "_components/sidebar.html" %}
 
-				<div class="container column">
-					<div class="section">
-						{% block content %}
-						{% endblock content %}
-					</div>
+				<div class="content column">
+					{% comment %} <div class="column"> {% endcomment %}
+						<div class="section">
+							{% block content %}
+							{% endblock content %}
+						</div>
+					{% comment %} </div> {% endcomment %}
 				</div>
 			</section>
 		</div>

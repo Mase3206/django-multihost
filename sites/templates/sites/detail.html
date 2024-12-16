@@ -1,7 +1,21 @@
 {% extends "base.html" %}
+{% load markdown_extras %}
 
 {% block content %}
 
-{% comment %} here {% endcomment %}
+<h2>{{ site.name }}</h2>
+
+<hr />
+<ul class="site-links">
+	<li>
+		Git repo: <a href="{{ site.remote_repo }}">{{ site.remote_repo }}</a>
+	</li>
+	<li>
+		Deployed Site: <a href="{% url 'sites:deployment' pk=site.pk %}">{% url 'sites:deployment' pk=site.pk %}</a>
+	</li>
+</ul>
+<hr />
+
+<p>{{ site.description|markdown|safe }}</p>
 
 {% endblock content %}
