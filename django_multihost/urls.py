@@ -24,7 +24,7 @@ from .views import BasicHomepageView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-	path('', BasicHomepageView.as_view(), name='basic_home'),
+	path('', BasicHomepageView.as_view(), name='home'),
 ]
 
 if settings.DEBUG == True:

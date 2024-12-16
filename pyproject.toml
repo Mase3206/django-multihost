@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "deploy"
+name = "django_multihost"
 version = "2.0.0-alpha0"
 description = ""
 authors = ["Mase3206 <35052448+Mase3206@users.noreply.github.com>"]

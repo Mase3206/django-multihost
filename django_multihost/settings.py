@@ -55,7 +55,7 @@ MIDDLEWARE = [
 	'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
-ROOT_URLCONF = 'deploy.urls'
+ROOT_URLCONF = 'multihost.urls'
 
 TEMPLATES = [
     {
@@ -73,7 +73,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'deploy.wsgi.application'
+WSGI_APPLICATION = 'multihost.wsgi.application'
 
 
 # Database
