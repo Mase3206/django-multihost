@@ -1,9 +1,11 @@
 <nav class="nav" role="navigation" aria-label="main navigation">
 	<div class="navbar">
 		<div class="navbar-brand">
-			<a class="navbar-item" href="#">
+			<a class="navbar-item" href="/">
 				Django MultiHost
 			</a>
+
+			
 
 			<a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="baseNavbar">
 				<span aria-hidden="true"></span>
@@ -11,25 +13,47 @@
 				<span aria-hidden="true"></span>
 			</a>
 		</div>
-		{% comment %} <input type="checkbox" id="navbar-menu" class="is-hidden"/> {% endcomment %}
+		
+
 		<div id="baseNavbar" class="navbar-menu">
 			<div class="navbar-end">
-				<a href="/" class="navbar-item is-hidden-tablet">
+				<a href="/" class="navbar-item is-hidden-mobile">
 					<span class="icon"><i class="fa fa-home"></i></span> Home
 				</a>
-				<a href="{% url "sites:list" %}" class="navbar-item is-hidden-tablet">
+				<a href="{% url "sites:list" %}" class="navbar-item is-hidden-mobile">
 					<span class="icon"><i class="fa fa-table"></i></span> Sites
 				</a>
-				<a class="navbar-item is-hidden-tablet">
+				<a class="navbar-item is-hidden-mobile">
 					<span class="icon"><i class="fa fa-info"></i></span> About
 				</a>
-				
-				<a class="navbar-item">
-					<span class="icon"><i class="fa fa-user"></i></span><span class="is-hidden-desktop"> Account</span>
-				</a>
-				<a class="navbar-item">
-					<span class="icon"><i class="fas fa-sign-out-alt"></i></span><span class="is-hidden-desktop"> Logout</span>
-				</a>
+
+
+				<hr class="is-hidden-mobile mx-3 my-1" />
+				<div class="navbar-item">
+					<div class="buttons">
+						{% if user.is_staff %}
+						<a class="button is-danger" href="{% url "admin:index" %}" class="navbar-item">
+							Admin
+						</a>
+						{% endif %}
+
+						{% if user.is_authenticated %}
+						{% comment %} <a href="{% url "logout" %}" class="navbar-item">
+							<span class="icon"><i class="fas fa-sign-out-alt"></i></span><span class="is-hidden-desktop"> Logout</span>
+						</a> {% endcomment %}
+						<form class="" id="logoutForm" method="post" action="{% url 'logout' %}">{% csrf_token %}
+							<button type="submit" class="button" id="logoutButton">
+								Logout
+							</button>
+						</form>
+
+						{% else %}
+						<a class="button is-primary" href="{% url "login" %}">
+							Login
+						</a>
+						{% endif %}
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>
