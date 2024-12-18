@@ -24,8 +24,9 @@ from .views import HomepageView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-	path('', HomepageView.as_view(), name='home'),
+	path('account/', include('django.contrib.auth.urls')),
 	path('sites/', include('sites.urls')),
+	path('', HomepageView.as_view(), name='home'),
 ]
 
 if settings.DEBUG == True:

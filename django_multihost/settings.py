@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     # -- 3rd-party -- #
 	'debug_toolbar',
 	'bulma',
+	'django_extensions',
 	# 'revproxy.apps.RevProxyConfig',
 	# 'proxy',
 	
@@ -117,6 +118,12 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+
+LOGIN_URL = '/accounts/login'
+
+LOGIN_REDIRECT_URL = 'home'
+LOGOUT_REDIRECT_URL = 'home'
 
 
 # Internationalization
