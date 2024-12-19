@@ -11,15 +11,18 @@
 		{% endif %}
 	</div>
 
-	{% if user.associated_site == site %}
 	<div class="buttons">
-		<a href="{% url "sites:update" pk=object.pk %}" class="button is-small is-info">Edit site</a>
+		{% if user.associated_site == site %}
+			<a href="{% url "sites:update" pk=object.pk %}" class="button is-small is-info">Edit</a>
+		{% elif user.is_superuser or perms.sites.change_site %}
+			<a href="{% url "sites:update" pk=object.pk %}" class="button is-small is-warning" title="You are about to edit someone else's site!">Edit</a>
+		{% endif %}
+
+
+		{% if user.is_superuser or perms.sites.change_site %}
+			<a href="{% url "sites:delete" pk=object.pk %}" class="button is-small is-danger">Delete</a>
+		{% endif %}
 	</div>
-	{% elif user.is_superuser or perms.sites.change_site %}
-	<div>
-		<a href="{% url "sites:update" pk=object.pk %}" class="button is-small is-warning" title="You are about to edit someone else's site!">Edit site</a>
-	</div>
-	{% endif %}
 </div>
 
 <hr />

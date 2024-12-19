@@ -123,7 +123,7 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
-LOGIN_URL = '/accounts/login'
+LOGIN_URL = '/account/login'
 AUTH_USER_MODEL = 'account.CustomUser'
 
 LOGIN_REDIRECT_URL = 'home'

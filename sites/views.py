@@ -1,4 +1,4 @@
-from django.views.generic import ListView, DetailView, CreateView, UpdateView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import (
 	AccessMixin, # control what happens if 403
 	LoginRequiredMixin, # ensure user is logged in
@@ -8,7 +8,6 @@ from django.contrib.auth.mixins import (
 from django.views.generic.detail import SingleObjectMixin
 from django.conf import settings
 from django.urls import reverse_lazy, reverse
-from django.core.exceptions import ImproperlyConfigured
 
 # from revproxy.views import ProxyView
 from django.views.decorators.csrf import csrf_exempt
@@ -40,6 +39,7 @@ class SiteCreationView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
 	login_url = settings.LOGIN_URL
 	template_name = 'sites/create.html'
 	success_url = reverse_lazy('sites:list')
+	permission_denied_message = f'You are not permitted to create new sites.'
 
 	def test_func(self) -> bool | None:
 		"""
@@ -76,6 +76,20 @@ class SiteUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 			kwargs = { 'pk': self.this_object.pk }
 		)
 
+
+
+class SiteDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+	model = Site
+	# form_class = SiteForm
+	login_url = settings.LOGIN_URL
+	template_name = 'sites/delete.html'
+	success_url = reverse_lazy('sites:list')
+
+	def test_func(self) -> bool | None:
+		"""
+		Ensure the user is permitted to delete sites.
+		"""
+		return self.request.user.has_perm('sites.delete_site') #type:ignore
 
 
 
