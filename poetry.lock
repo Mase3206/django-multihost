@@ -140,6 +140,24 @@ files = [
 ]
 
 [[package]]
+name = "crispy-bulma"
+version = "0.11.0"
+description = "Bulma template pack for django-crispy-forms"
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "crispy-bulma-0.11.0.tar.gz", hash = "sha256:27eccd09a5a77754d64462f61ff585c00feb8c15f65d0d8f9676ab26f6bc3562"},
+    {file = "crispy_bulma-0.11.0-py3-none-any.whl", hash = "sha256:bc5406d64649a3da9c61d1aa969cb2c39bb3a1802ba8ee4bccebe94a84ca94e1"},
+]
+
+[package.dependencies]
+Django = ">=4.2"
+django-crispy-forms = ">=2.0"
+
+[package.extras]
+test = ["pytest", "pytest-django"]
+
+[[package]]
 name = "django"
 version = "5.1.4"
 description = "A high-level Python web framework that encourages rapid development and clean, pragmatic design."
@@ -172,6 +190,20 @@ files = [
 
 [package.dependencies]
 django = ">=2.2"
+
+[[package]]
+name = "django-crispy-forms"
+version = "2.3"
+description = "Best way to have Django DRY forms"
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "django_crispy_forms-2.3-py3-none-any.whl", hash = "sha256:efc4c31e5202bbec6af70d383a35e12fc80ea769d464fb0e7fe21768bb138a20"},
+    {file = "django_crispy_forms-2.3.tar.gz", hash = "sha256:2db17ae08527201be1273f0df789e5f92819e23dd28fec69cffba7f3762e1a38"},
+]
+
+[package.dependencies]
+django = ">=4.2"
 
 [[package]]
 name = "django-debug-toolbar"
@@ -553,4 +585,4 @@ brotli = ["brotli"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.12"
-content-hash = "de8d4781db30e0da6e326b624f0424f3eda3f7022314dde194245b5b77c331c0"
+content-hash = "6858b2d0e1ceb3d6add2fad498a46938f8fe650a73bb80d8e59ea4cff70def03"
