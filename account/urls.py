@@ -1,7 +1,6 @@
 from django.urls import path
-from .views import SignUpView, SiteGroupCreateView
+from .views import SignUpView
 
 urlpatterns = [
-	path('user/signup/', SignUpView.as_view(), name='signup'),
-	path('group/create/', SiteGroupCreateView.as_view(), name='group_create'),
+	path('signup/', SignUpView.as_view(), name='signup'),
 ]

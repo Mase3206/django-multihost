@@ -6,8 +6,52 @@
 
 <h2>Sign up</h2>
 <form method="post">{% csrf_token %}
-	{{ form|crispy }}
-	<button class="btn btn-success ms-0" type="submit">Sign up</button>
+	<!-- Row 1 -->
+	<div class="columns">
+		<div class="column is-3">
+			{{ form.first_name|as_crispy_field }}
+		</div>
+	
+		<div class="column is-5">
+			{{ form.last_name|as_crispy_field }}
+		</div>
+	
+		<div class="column is-4">
+			{{ form.email|as_crispy_field }}
+		</div>
+	</div>
+	
+	<div class="columns">
+		<div class="column is-4">
+			{{ form.username|as_crispy_field }}
+		</div>
+
+		<div class="column is-4">
+			{{ form.github_username|as_crispy_field }}
+		</div>
+		
+		<div class="column is-4">
+			{{ form.associated_site|as_crispy_field }}
+		</div>
+	</div>
+
+	<div class="columns">
+		<div class="column is-half">
+			{{ form.password1|as_crispy_field }}
+		</div>
+
+		<div class="column is-half">
+			{{ form.password2|as_crispy_field }}
+		</div>
+	</div>
+
+	<div class="columns">
+	</div>
+
+		
+
+	{% comment %} {{ form|crispy }} {% endcomment %}
+	<button class="button is-success ms-0 mt-2" type="submit">Sign up</button>
 </form>
 
 {% endblock content %}
