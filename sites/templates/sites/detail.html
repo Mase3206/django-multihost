@@ -12,7 +12,7 @@
 	</div>
 
 	{% if user.associated_site == site %}
-	<div>
+	<div class="buttons">
 		<a href="" class="button is-small is-info">Edit site</a>
 	</div>
 	{% elif user.is_superuser or perms.sites.change_site %}
@@ -28,7 +28,7 @@
 		Git repo: <a href="{{ site.remote_repo }}">{{ site.remote_repo }}</a>
 	</li>
 	<li>
-		Deployed Site: <a href="{% url 'sites:deployment' pk=site.pk %}">{% url 'sites:deployment' pk=site.pk %}</a>
+		Deployed Site: {% comment %}<a href="{% url 'sites:deployment' pk=site.pk %}">{% url 'sites:deployment' pk=site.pk %}</a>{% endcomment %}
 	</li>
 </ul>
 <hr />

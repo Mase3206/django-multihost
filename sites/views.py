@@ -1,6 +1,13 @@
-from django.views.generic import ListView, DetailView, View
+from django.views.generic import ListView, DetailView, CreateView, UpdateView
+from django.contrib.auth.mixins import (
+	AccessMixin, # control what happens if 403
+	LoginRequiredMixin, # ensure user is logged in
+    UserPassesTestMixin, # extra conditions that, if failed, throw a 403
+)
+
 from django.views.generic.detail import SingleObjectMixin
 from django.conf import settings
+from django.urls import reverse_lazy
 from django.core.exceptions import ImproperlyConfigured
 
 # from revproxy.views import ProxyView
@@ -8,6 +15,7 @@ from django.views.decorators.csrf import csrf_exempt
 # from proxy.views import proxy_view
 
 from .models import Site
+from .forms import SiteForm
 
 # Create your views here.
 class SitesListView(ListView):
@@ -25,20 +33,40 @@ class SiteDetailView(DetailView):
 		return context
 
 
+class SiteCreationView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
+	form_class = SiteForm
+	login_url = settings.LOGIN_URL
+	template_name = 'sites/create.html'
+	success_url = reverse_lazy('sites:list')
 
-def get_hostname_parts() -> list[str]:
-	hs = ['', '']
-	hs = settings.HOSTNAME.split(':')
+	def test_func(self) -> bool | None:
+		"""
+		Ensure the user is permitted to create sites.
+		"""
+		return self.request.user.has_perm('sites.add_site') #type:ignore
 
-	if len(hs) > 1:
-		if settings.HTTPS:
-			hs[1] = '443'
-		else:
-			hs[1] = '80'
-	return hs
 
-class SiteDeploymentView(View):
-	pass
+
+
+
+
+
+
+
+
+# def get_hostname_parts() -> list[str]:
+# 	hs = ['', '']
+# 	hs = settings.HOSTNAME.split(':')
+
+# 	if len(hs) > 1:
+# 		if settings.HTTPS:
+# 			hs[1] = '443'
+# 		else:
+# 			hs[1] = '80'
+# 	return hs
+
+# class SiteDeploymentView(View):
+# 	pass
 # 	model = Site
 	# hostname_parts = get_hostname_parts()
 	# if hostname_parts[1] == settings.DEPLOYMENT_START_PORT:
