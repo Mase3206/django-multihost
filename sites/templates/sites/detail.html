@@ -3,7 +3,24 @@
 
 {% block content %}
 
-<h2>{{ site.name }}</h2>
+<div class="is-flex is-justify-content-space-between is-align-items-flex-end">
+	<div class="is-flex is-align-items-flex-end">
+		<h2 class="mb-0 mr-3">{{ site.name }}</h2>
+		{% if user.associated_site == site %}
+		<p class="is-size-7 has-text-weight-medium is-italic is-light-grey">(This is your site!)</p>
+		{% endif %}
+	</div>
+
+	{% if user.associated_site == site %}
+	<div>
+		<a href="" class="button is-small is-info">Edit site</a>
+	</div>
+	{% elif user.is_superuser or perms.sites.change_site %}
+	<div>
+		<a href="" class="button is-small is-warning" title="You are about to edit someone else's site!">Edit site</a>
+	</div>
+	{% endif %}
+</div>
 
 <hr />
 <ul class="site-links">
