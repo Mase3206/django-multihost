@@ -7,7 +7,7 @@ from django.contrib.auth.mixins import (
 
 from django.views.generic.detail import SingleObjectMixin
 from django.conf import settings
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.core.exceptions import ImproperlyConfigured
 
 # from revproxy.views import ProxyView
@@ -16,6 +16,8 @@ from django.views.decorators.csrf import csrf_exempt
 
 from .models import Site
 from .forms import SiteForm
+
+from account.models import CustomUser
 
 # Create your views here.
 class SitesListView(ListView):
@@ -46,6 +48,33 @@ class SiteCreationView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
 		return self.request.user.has_perm('sites.add_site') #type:ignore
 
 
+class SiteUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+	model = Site
+	form_class = SiteForm
+	login_url = settings.LOGIN_URL
+	template_name = 'sites/update.html'
+
+	@property
+	def this_object(self) -> Site:
+		return super().get_object(self.get_queryset()) #type:ignore
+
+	def test_func(self) -> bool | None:
+		"""
+		Ensure the user is either an admin or is associated with the site.
+		"""
+
+		this_user = CustomUser.objects.get(pk=self.request.user.pk)
+
+		return (
+			self.request.user.has_perm('sites.change_site') or #type:ignore
+			this_user.associated_site == self.this_object
+		)
+	
+	def get_success_url(self) -> str:
+		return reverse(
+			'sites:detail',
+			kwargs = { 'pk': self.this_object.pk }
+		)
 
 
 
