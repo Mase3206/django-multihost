@@ -1,13 +1,22 @@
-from django.views.generic import ListView, DetailView, View
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.contrib.auth.mixins import (
+	AccessMixin, # control what happens if 403
+	LoginRequiredMixin, # ensure user is logged in
+    UserPassesTestMixin, # extra conditions that, if failed, throw a 403
+)
+
 from django.views.generic.detail import SingleObjectMixin
 from django.conf import settings
-from django.core.exceptions import ImproperlyConfigured
+from django.urls import reverse_lazy, reverse
 
 # from revproxy.views import ProxyView
 from django.views.decorators.csrf import csrf_exempt
 # from proxy.views import proxy_view
 
 from .models import Site
+from .forms import SiteForm
+
+from account.models import CustomUser
 
 # Create your views here.
 class SitesListView(ListView):
@@ -25,20 +34,82 @@ class SiteDetailView(DetailView):
 		return context
 
 
+class SiteCreationView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
+	form_class = SiteForm
+	login_url = settings.LOGIN_URL
+	template_name = 'sites/create.html'
+	success_url = reverse_lazy('sites:list')
+	permission_denied_message = f'You are not permitted to create new sites.'
 
-def get_hostname_parts() -> list[str]:
-	hs = ['', '']
-	hs = settings.HOSTNAME.split(':')
+	def test_func(self) -> bool | None:
+		"""
+		Ensure the user is permitted to create sites.
+		"""
+		return self.request.user.has_perm('sites.add_site') #type:ignore
 
-	if len(hs) > 1:
-		if settings.HTTPS:
-			hs[1] = '443'
-		else:
-			hs[1] = '80'
-	return hs
 
-class SiteDeploymentView(View):
-	pass
+class SiteUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+	model = Site
+	form_class = SiteForm
+	login_url = settings.LOGIN_URL
+	template_name = 'sites/update.html'
+
+	@property
+	def this_object(self) -> Site:
+		return super().get_object(self.get_queryset()) #type:ignore
+
+	def test_func(self) -> bool | None:
+		"""
+		Ensure the user is either an admin or is associated with the site.
+		"""
+
+		this_user = CustomUser.objects.get(pk=self.request.user.pk)
+
+		return (
+			self.request.user.has_perm('sites.change_site') or #type:ignore
+			this_user.associated_site == self.this_object
+		)
+	
+	def get_success_url(self) -> str:
+		return reverse(
+			'sites:detail',
+			kwargs = { 'pk': self.this_object.pk }
+		)
+
+
+
+class SiteDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+	model = Site
+	# form_class = SiteForm
+	login_url = settings.LOGIN_URL
+	template_name = 'sites/delete.html'
+	success_url = reverse_lazy('sites:list')
+
+	def test_func(self) -> bool | None:
+		"""
+		Ensure the user is permitted to delete sites.
+		"""
+		return self.request.user.has_perm('sites.delete_site') #type:ignore
+
+
+
+
+
+
+
+# def get_hostname_parts() -> list[str]:
+# 	hs = ['', '']
+# 	hs = settings.HOSTNAME.split(':')
+
+# 	if len(hs) > 1:
+# 		if settings.HTTPS:
+# 			hs[1] = '443'
+# 		else:
+# 			hs[1] = '80'
+# 	return hs
+
+# class SiteDeploymentView(View):
+# 	pass
 # 	model = Site
 	# hostname_parts = get_hostname_parts()
 	# if hostname_parts[1] == settings.DEPLOYMENT_START_PORT:

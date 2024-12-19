@@ -11,9 +11,11 @@ class SiteAdmin(admin.ModelAdmin):
 		'remote_repo',
 		'description',
 		'description_brief',
+		'use_bundled_db',
 	]
 	list_display = [
 		'name',
 		'path',
 		'remote_repo',
+		'use_bundled_db',
 	]

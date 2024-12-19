@@ -23326,6 +23326,10 @@ html, body, #app {
     display: block;
   }
 }
+.is-light-grey {
+  color: #666;
+}
+
 ul.site-links {
   list-style: none !important;
   margin-left: 0px;

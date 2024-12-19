@@ -17,13 +17,13 @@
 
 		<div id="baseNavbar" class="navbar-menu">
 			<div class="navbar-end">
-				<a href="/" class="navbar-item is-hidden-mobile">
+				<a href="/" class="navbar-item is-hidden-tablet">
 					<span class="icon"><i class="fa fa-home"></i></span> Home
 				</a>
-				<a href="{% url "sites:list" %}" class="navbar-item is-hidden-mobile">
+				<a href="{% url "sites:list" %}" class="navbar-item is-hidden-tablet">
 					<span class="icon"><i class="fa fa-table"></i></span> Sites
 				</a>
-				<a class="navbar-item is-hidden-mobile">
+				<a class="navbar-item is-hidden-tablet">
 					<span class="icon"><i class="fa fa-info"></i></span> About
 				</a>
 
@@ -50,6 +50,9 @@
 						{% else %}
 						<a class="button is-primary" href="{% url "login" %}">
 							Login
+						</a>
+						<a class="button" href="{% url "signup" %}">
+							Signup
 						</a>
 						{% endif %}
 					</div>

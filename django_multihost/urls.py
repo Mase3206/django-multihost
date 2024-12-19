@@ -24,7 +24,10 @@ from .views import HomepageView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+	
+	path('account/', include('account.urls')),
 	path('account/', include('django.contrib.auth.urls')),
+	
 	path('sites/', include('sites.urls')),
 	path('', HomepageView.as_view(), name='home'),
 ]

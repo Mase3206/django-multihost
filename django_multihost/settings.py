@@ -49,11 +49,14 @@ INSTALLED_APPS = [
 	'debug_toolbar',
 	'bulma',
 	'django_extensions',
+	'crispy_forms',
+	'crispy_bulma',
 	# 'revproxy.apps.RevProxyConfig',
 	# 'proxy',
 	
     # -- Project -- #
 	'sites',
+	'account',
 ]
 
 MIDDLEWARE = [
@@ -120,10 +123,11 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
-LOGIN_URL = '/accounts/login'
+LOGIN_URL = '/account/login'
+AUTH_USER_MODEL = 'account.CustomUser'
 
 LOGIN_REDIRECT_URL = 'home'
-LOGOUT_REDIRECT_URL = 'home'
+LOGOUT_REDIRECT_URL = 'logged_out'
 
 
 # Internationalization
@@ -154,6 +158,12 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+
+
+CRISPY_TEMPLATE_PACK = 'bulma'
+CRISPY_ALLOWED_TEMPLATE_PACKS = (
+	'bulma',
+)
 
 
 # These will need to be adjusted upon deployment
