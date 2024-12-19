@@ -127,7 +127,7 @@ LOGIN_URL = '/account/login'
 AUTH_USER_MODEL = 'account.CustomUser'
 
 LOGIN_REDIRECT_URL = 'home'
-LOGOUT_REDIRECT_URL = 'home'
+LOGOUT_REDIRECT_URL = 'logged_out'
 
 
 # Internationalization
