@@ -17,8 +17,8 @@ from deploy.conf.service import (
 
 
 class DBConf(ServiceConf):
-	def __init__(self, serviceName='db', dbName='db', username='user', password='password', *args, **kwargs):
-		super().__init__(name=serviceName, *args, **kwargs)
+	def __init__(self, image: str, serviceName='db', dbName='db', username='user', password='password', *args, **kwargs):
+		super().__init__(name=serviceName, image=image, *args, **kwargs)
 		self.dbName = dbName
 		self.username = username
 		if password == 'password':
@@ -30,6 +30,7 @@ class PostgresConf(DBConf):
 	def __init__(self, dbName='pgdb', username='pguser', password=randomString(32), *args, **kwargs):
 		super().__init__(
 			serviceName='postgres',
+			image='postgres:17.0',
 			dbName=dbName,
 			username=username,
 			password=password,

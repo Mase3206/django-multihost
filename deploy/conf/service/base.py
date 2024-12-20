@@ -16,12 +16,14 @@ class ServiceConf:
 	def __init__(
 			self, 
 			name: str, 
+			image: str,
 			volumes: list[Volume]=[], 
 			environment: list[EnvironmentVariable]=[],
 			networks: list[Network]=[],
 			labels: list[Label]=[],
 		) -> None:
 		self.name = name
+		self.image = image
 		self.volumes = volumes
 		self.environment = environment
 		self.networks = networks

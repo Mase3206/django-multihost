@@ -29,7 +29,7 @@ class SiteConf(ServiceConf, DockerBuildMixin):
 	context = './deploy/dockerfiles/'
 
 	def __init__(self, groupName: str, sitePath: str, projectFolder: str, database: DBConf, secretKey='', debug=False, *args, **kwargs):
-		super().__init__('gunicorn')
+		super().__init__('gunicorn', 'Mase3206/gunicorn')
 		self.sitePath = sitePath
 		self.projectFolder = projectFolder
 		self.database = database
