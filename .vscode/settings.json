@@ -2,8 +2,8 @@
 	"makefile.configureOnOpen": false,
 	"yaml.schemas": {
 		"https://raw.githubusercontent.com/compose-spec/compose-spec/master/schema/compose-spec.json": [
-			"file:///Users/noahroberts/GitHub/django-multihost/deploy/compose/site.yml"
+			"file:///Users/noahroberts/GitHub/django-multihost/deploy_raw/compose/site.yml"
 		],
-		"https://json.schemastore.org/yamllint.json": "file:///Users/noahroberts/GitHub/django-multihost/deploy/example/deploy.yml"
+		"https://json.schemastore.org/yamllint.json": "file:///Users/noahroberts/GitHub/django-multihost/deploy_raw/example/deploy.yml"
 	}
 }

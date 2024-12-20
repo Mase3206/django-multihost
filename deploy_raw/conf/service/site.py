@@ -1,19 +1,19 @@
 from __future__ import annotations
 
-from deploy import exceptions
-from deploy.control.mixins import DockerBuildMixin
-from deploy.helpers import randomString
-from deploy.conf.service.parts import (
+from deploy_raw import exceptions
+from deploy_raw.control.mixins import DockerBuildMixin
+from deploy_raw.helpers import randomString
+from deploy_raw.conf.service.parts import (
 	Volume,
 	Network,
 	EnvironmentVariable,
 	Port,
 	Label,
 )
-from deploy.conf.service import (
+from deploy_raw.conf.service import (
 	ServiceConf
 )
-from deploy.conf.service import (
+from deploy_raw.conf.service import (
 	DBConf
 )
 

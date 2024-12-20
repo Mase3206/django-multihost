@@ -1,8 +1,8 @@
 from __future__ import annotations
 from typing import TypeVar
 
-from deploy import exceptions
-from deploy.conf.service.parts import (
+from deploy_raw import exceptions
+from deploy_raw.conf.service.parts import (
 	Volume,
 	Network,
 	EnvironmentVariable,

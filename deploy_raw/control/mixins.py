@@ -1,7 +1,7 @@
 """Docker API interface."""
 
 import docker
-from deploy import exceptions
+from deploy_raw import exceptions
 
 client = docker.from_env()
 

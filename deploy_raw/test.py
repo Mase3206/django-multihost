@@ -1,8 +1,8 @@
-from deploy.conf import (
+from deploy_raw.conf import (
 	StackConf,
 	initializeFromYaml,
 )
-from deploy.conf.service import (
+from deploy_raw.conf.service import (
 	SiteConf,
 	PostgresConf,
 )

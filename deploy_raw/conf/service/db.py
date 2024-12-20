@@ -1,8 +1,8 @@
 from __future__ import annotations
 
-from deploy import exceptions
-from deploy.helpers import randomString
-from deploy.conf.service.parts import (
+from deploy_raw import exceptions
+from deploy_raw.helpers import randomString
+from deploy_raw.conf.service.parts import (
 	Volume,
 	Network,
 	EnvironmentVariable,
@@ -10,7 +10,7 @@ from deploy.conf.service.parts import (
 	Label,
 )
 
-from deploy.conf.service import (
+from deploy_raw.conf.service import (
 	ServiceConf
 )
 
