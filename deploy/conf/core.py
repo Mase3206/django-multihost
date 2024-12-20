@@ -49,6 +49,29 @@ class StackConf:
 		# run pop but don't return the popped service
 		self.pop(service)
 
+	def getRootDictConfs(self):
+		"""
+		Return the root-level dicts (or YAML or JSON) for volumes and networks.
+		"""
+		nets: list[dict] = []
+		vols: list[dict] = []
+
+		for s in self.services:
+			for n in s.networks:
+				# deduplicate, as networks can be shared
+				if n not in nets:
+					nets.append(n.rootConf)
+			
+			for v in s.volumes:
+				# we only care about non-folder mounts
+				if v.typ != 'folder':
+					# this will never be none if this check passes
+					vols.append(v.rootConf) #type:ignore
+
+		return {
+			'volumes': {v['name']: v for v in vols},
+			'networks': {n['name']: n for n in nets},
+		}
 	
 
 	# metaclasses

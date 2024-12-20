@@ -105,6 +105,6 @@ class SiteConf(ServiceConf, DockerBuildMixin):
 		]
 		self.networks += [
 			Network('traefik', external=True),
-			Network('default')
+			Network(f'{self.groupName}_default')
 		]
 

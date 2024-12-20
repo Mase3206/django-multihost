@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from deploy import exceptions
 from pathlib import Path, PosixPath
 
@@ -81,6 +83,12 @@ class Network(Part):
 			'name': self.name,
 			'external': self.external
 		}}
+	
+	def __eq__(self, value: Network) -> bool:
+		if type(value) == Network:
+			return self.name == value.name
+		else:
+			raise TypeError('Equality of networks can only be verified if both objects are networks.')
 	
 
 
