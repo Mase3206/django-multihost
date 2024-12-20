@@ -28,8 +28,18 @@ class SiteConf(ServiceConf, DockerBuildMixin):
 	tag = 'v0.2'
 	context = './deploy/dockerfiles/'
 
-	def __init__(self, groupName: str, sitePath: str, projectFolder: str, database: DBConf, secretKey='', debug=False, *args, **kwargs):
+	def __init__(
+			self, 
+			groupName: str, 
+			sitePath: str, 
+			projectFolder: str, 
+			database: DBConf, 
+			secretKey='', 
+			debug=False, 
+			*args, **kwargs
+		):
 		super().__init__('gunicorn', 'Mase3206/gunicorn')
+		self.groupName = groupName
 		self.sitePath = sitePath
 		self.projectFolder = projectFolder
 		self.database = database
@@ -80,5 +90,21 @@ class SiteConf(ServiceConf, DockerBuildMixin):
 			EnvironmentVariable('PROJECT_FOLDER', self.projectFolder),
 			EnvironmentVariable('SECRET_KEY', self.secretKey),
 			EnvironmentVariable('DEBUG', str(self.debug)),
+		]
+		self.labels += [
+			Label('traefik.enable', 'true'),
+			Label('traefik.docker.network', 'traefik'),
+
+			# set the hostname and path
+			Label(f'traefik.http.routers.gunicorn-{self.groupName}.rule', 'Host(gunicorn)'),
+			Label(f'traefik.http.routers.gunicorn-{self.groupName}.rule', f'PathPrefix(`/{self.sitePath})'),
+
+			# strip the path away and continue
+			Label(f'traefik.http.routers.gunicorn-{self.groupName}.middlewares', f'gunicorn-{self.groupName}-stripprefix'),
+			Label(f'traefik.http.middlewares.gunicorn-{self.groupName}-stripprefix.stripprefix.prefixes', f'/{self.sitePath}'),
+		]
+		self.networks += [
+			Network('traefik', external=True),
+			Network('default')
 		]
 

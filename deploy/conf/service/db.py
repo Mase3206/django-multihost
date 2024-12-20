@@ -17,7 +17,15 @@ from deploy.conf.service import (
 
 
 class DBConf(ServiceConf):
-	def __init__(self, image: str, serviceName='db', dbName='db', username='user', password='password', *args, **kwargs):
+	def __init__(
+			self, 
+			image: str, 
+			serviceName='db', 
+			dbName='db', 
+			username='user', 
+			password='password', 
+			*args, **kwargs
+		):
 		super().__init__(name=serviceName, image=image, *args, **kwargs)
 		self.dbName = dbName
 		self.username = username

@@ -20,6 +20,7 @@ class ServiceConf:
 			volumes: list[Volume]=[], 
 			environment: list[EnvironmentVariable]=[],
 			networks: list[Network]=[],
+			ports: list[Port]=[],
 			labels: list[Label]=[],
 		) -> None:
 		self.name = name
