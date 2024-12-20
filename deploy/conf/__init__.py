@@ -1,5 +1,9 @@
-from .core import StackConf
+from .core import (
+	StackConf,
+	initializeFromYaml
+)
 
 __all__ = [
-	'StackConf'
+	'StackConf',
+	'initializeFromYaml',
 ]

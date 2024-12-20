@@ -28,6 +28,7 @@ class ServiceConf:
 		self.volumes = volumes
 		self.environment = environment
 		self.networks = networks
+		self.ports = ports
 		self.labels = labels
 
 	
@@ -52,8 +53,28 @@ class ServiceConf:
 		return ret
 
 
+	# @property
+	# def __dict__(self):
+	# 	return {
+	# 		'name': self.name,
+	# 		'image': self.image,
+	# 		'volumes': [dict(s) for s in self.volumes],
+	# 		'environment': [dict(s) for s in self.environment],
+	# 		'networks': [dict(s) for s in self.networks],
+	# 		'ports': [dict(s) for s in self.ports],
+	# 		'labels': [dict(s) for s in self.labels],
+	# 	}
+
 	def toDict(self):
-		return self.__dict__
+		return {
+			'name': self.name,
+			'image': self.image,
+			'volumes': [dict(s) for s in self.volumes],
+			'environment': [dict(s) for s in self.environment],
+			'networks': [dict(s) for s in self.networks],
+			'ports': [dict(s) for s in self.ports],
+			'labels': [dict(s) for s in self.labels],
+		}
 	
 	def __iter__(self):
 		self._iter_index = -1
@@ -72,7 +93,7 @@ class ServiceConf:
 			if type(v) == str:
 				vs.append(f"{k}='{v}'")
 			else:
-				vs.append(f'{k}={v}')
+				vs.append(f'{k}={repr(v)}')
 
 		n = type(self).__name__
 

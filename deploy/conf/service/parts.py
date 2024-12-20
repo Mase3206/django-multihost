@@ -21,7 +21,11 @@ class Part:
 		self._iter_index += 1
 		if self._iter_index >= len(self._iter_items):
 			raise StopIteration
-		return self._iter_items[self._iter_index]
+		_next = self._iter_items[self._iter_index]
+		if _next[0][0] == '_':
+			return self.__next__()
+		else:
+			return _next
 
 	def __str__(self): return self.full
 
@@ -42,19 +46,24 @@ class Part:
 class Volume(Part):
 	def __init__(self, host: Path | str, guest: PosixPath | str, mode='', typ='folder', name='') -> None:
 		if typ == 'folder' and type(host) == str:
-			self.host = Path(host)
+			self._host = Path(host)
 		else:
-			self.host = host
+			self._host = host
 
 		if type(guest) == str:
-			self.guest = PosixPath(guest)
+			self._guest = PosixPath(guest)
 		else:
-			self.guest = guest
+			self._guest = guest
 		
 		self.mode = mode
 		self.typ = typ
 		if self._validateName(name):
 			self.name = name
+
+	@property
+	def host(self): return str(self._host)
+	@property
+	def guest(self): return str(self._guest)
 
 	@property
 	def full(self):

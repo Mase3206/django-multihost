@@ -2,10 +2,16 @@ from __future__ import annotations
 
 from deploy import exceptions
 import re
+import yaml
+from pathlib import Path
 
 from deploy.conf.service import (
 	ServiceConf,
 	S
+)
+from deploy.conf.service import (
+	SiteConf,
+	PostgresConf,
 )
 
 
@@ -73,10 +79,24 @@ class StackConf:
 			'volumes': {v['name']: v for v in vols},
 			'networks': {n['name']: n for n in nets},
 		}
-	
+
+
+	# @property
+	# def __dict__(self):
+	# 	_services = [dict(s) for s in self.services]
+	# 	ret = {
+	# 		'name': self.name,
+	# 		'services': _services
+	# 	}
+	# 	return ret
 
 	def toDict(self):
-		return self.__dict__
+		_services = [s.toDict() for s in self.services]
+		ret = {
+			'name': self.name,
+			'services': _services
+		}
+		return ret
 	
 	def __iter__(self):
 		self._iter_index = -1
@@ -109,13 +129,45 @@ class StackConf:
 		return self
 	
 	def __repr__(self) -> str:
-		return f"StackConf(name='{self.name}', services={self.services})"
+		return f"StackConf(name='{self.name}', services={repr(self.services)})"
 
 
-# 	@staticmethod
-# 	def fromDict(rawConf) -> StackConf:
-# 		pass
+	@staticmethod
+	def fromConf(deployConf: dict) -> StackConf:
+		_stackName = deployConf['name']
+		stack = StackConf(_stackName)
+
+		# _vmountType = deployConf['options']['volume mount type']
+		_siteDb = deployConf['site']['database']
+		for _dbc in deployConf['databases']:
+			if _dbc['name'] == _siteDb:
+				if _dbc['use bundled']:
+					database = PostgresConf()
+				elif _dbc.get('type', None) == 'postgres':
+					database = PostgresConf(
+						dbName=_dbc['conf']['db name'],
+						username=_dbc['conf']['username'],
+						password=_dbc['conf']['password'],
+					)
+				else:
+					Exception('unsupported db type')
+		
+		site = SiteConf(
+			groupName=deployConf['site']['group name'],
+			sitePath=deployConf['site']['site path'],
+			projectFolder=deployConf['site']['project folder'],
+			database=database,
+		)
+		stack += [site, database]
+		return stack
 
 
 
-# def initFromYaml
+def initializeFromYaml(yamlFile: Path | str):
+	if type(yamlFile) != Path:
+		yamlFile = Path(yamlFile)
+
+	with open(yamlFile, 'r') as f:
+		out = yaml.safe_load(f)
+
+	return StackConf.fromConf(out)
