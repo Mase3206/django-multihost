@@ -37,10 +37,10 @@ services:
       - "traefik.enable=true"
       # set the hostname and path
       - "traefik.http.routers.gunicorn-${GROUP_NAME}.rule=Host(gunicorn)"
-      - "traefik.http.routers.gunicorn-${GROUP_NAME}.rule=PathPrefix(`/${SITE_NAME}`)"
+      - "traefik.http.routers.gunicorn-${GROUP_NAME}.rule=PathPrefix(`/${SITE_PATH}`)"
       # strip the path away and continue
       - "traefik.http.routers.gunicorn-${GROUP_NAME}.middlewares=gunicorn-${GROUP_NAME}-stripprefix"
-      - "traefik.http.middlewares.gunicorn-${GROUP_NAME}-stripprefix.stripprefix.prefixes=/${SITE_NAME}"
+      - "traefik.http.middlewares.gunicorn-${GROUP_NAME}-stripprefix.stripprefix.prefixes=/${SITE_PATH}"
       - "traefik.docker.network=traefik"
     environment:
       - "POSTGRES_USER=pguser"
