@@ -12,9 +12,17 @@ class Part:
 
 
 class Volume(Part):
-	def __init__(self, host: Path, guest: PosixPath, mode='', typ='folder', name='') -> None:
-		self.host = host
-		self.guest = guest
+	def __init__(self, host: Path | str, guest: PosixPath | str, mode='', typ='folder', name='') -> None:
+		if typ == 'folder' and type(host) == str:
+			self.host = Path(host)
+		else:
+			self.host = host
+
+		if type(guest) == str:
+			self.guest = PosixPath(guest)
+		else:
+			self.guest = guest
+		
 		self.mode = mode
 		self.typ = typ
 		if self._validateName(name):
