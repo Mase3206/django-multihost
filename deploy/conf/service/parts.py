@@ -9,6 +9,8 @@ class Part:
 	@property
 	def full(self) -> str: ...
 
+	def toDict(self): ...
+
 	def __str__(self): return self.full
 
 	def __repr__(self) -> str:
@@ -106,6 +108,8 @@ class EnvironmentVariable(Part):
 	def full(self):
 		return f'"{self.name}={self.value}"'
 
+	def toDict(self):
+		return { self.name: self.value }
 
 	def _validateName(self, name: str) -> bool:
 		prohibited = [
@@ -146,6 +150,9 @@ class Label(Part):
 	def __init__(self, name: str, value: str):
 		self.name = name
 		self.value = value
+
+	def toDict(self):
+		return { self.name: self.value }
 
 	@property
 	def full(self):
