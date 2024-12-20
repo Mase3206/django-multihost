@@ -9,6 +9,18 @@ class Part:
 
 	def __str__(self): return self.full
 
+	def __repr__(self) -> str:
+		vs: list[str] = []
+		for k, v in self.__dict__.items():
+			if type(v) == str:
+				vs.append(f"{k}='{v}'")
+			else:
+				vs.append(f'{k}={v}')
+
+		n = type(self).__name__
+
+		return f'{n}({', '.join(vs)})'
+
 
 
 class Volume(Part):
@@ -88,10 +100,13 @@ class EnvironmentVariable(Part):
 
 
 	def _validateName(self, name: str) -> bool:
-		if ('-' or '$' or '#') in name.split(''):
-			return False
-		
-		if (0 or 1 or 2 or 3 or 4 or 5 or 6 or 7 or 8 or 9) in name.split(''):
+		prohibited = [
+			'-', '$', '#', 
+			*list(range(0, 10))
+		]
+
+		# check if any of the prohibited characters are in the name
+		if any(map(lambda v: v in prohibited, list(name))):
 			return False
 		
 		if name != name.upper():
