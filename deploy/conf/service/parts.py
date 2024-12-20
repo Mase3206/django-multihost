@@ -46,14 +46,14 @@ class Part:
 class Volume(Part):
 	def __init__(self, host: Path | str, guest: PosixPath | str, mode='', typ='folder', name='') -> None:
 		if typ == 'folder' and type(host) == str:
-			self._host = Path(host)
+			self._host = Path(host, ).resolve()
 		else:
 			self._host = host
 
 		if type(guest) == str:
 			self._guest = PosixPath(guest)
 		else:
-			self._guest = guest
+			self._guest = guest.resolve()
 		
 		self.mode = mode
 		self.typ = typ
@@ -126,7 +126,7 @@ class EnvironmentVariable(Part):
 
 	@property
 	def full(self):
-		return f'"{self.name}={self.value}"'
+		return f'{self.name}={self.value}'
 
 	def _validateName(self, name: str) -> bool:
 		prohibited = [
@@ -159,7 +159,7 @@ class Port(Part):
 		
 	@property
 	def full(self):
-		return f'"{self.host}:{self.guest}"'
+		return f'{self.host}:{self.guest}'
 
 
 class Label(Part):
@@ -169,4 +169,4 @@ class Label(Part):
 
 	@property
 	def full(self):
-		return f'"{self.name}={self.value}"'
+		return f'{self.name}={self.value}'

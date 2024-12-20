@@ -48,11 +48,12 @@ class SiteConf(ServiceConf, DockerBuildMixin):
 		else:
 			self.secretKey = secretKey
 		self._debug = debug
+		self._addParts()
 
 	
 	@property
 	def debug(self) -> int:
-		return int(self.debug)
+		return int(self._debug)
 
 
 

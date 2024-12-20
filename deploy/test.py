@@ -7,7 +7,7 @@ from deploy.conf.service import (
 	PostgresConf,
 )
 
-import json
+import json, yaml, sys
 
 
 def manual():
@@ -26,11 +26,12 @@ def manual():
 		db
 	]
 
-	print(repr(stack))
+	# print(repr(stack))
+	return stack
 
 
 def fromYaml():
 	stack = initializeFromYaml('deploy/example/deploy.yml')
 	print(json.dumps(stack.toDict()))
 
-fromYaml()
+print(yaml.safe_dump(manual().toCompose()))

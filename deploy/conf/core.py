@@ -14,6 +14,8 @@ from deploy.conf.service import (
 	PostgresConf,
 )
 
+from deploy.control.mixins import DockerBuildMixin
+
 
 
 
@@ -66,7 +68,7 @@ class StackConf:
 		for s in self.services:
 			for n in s.networks:
 				# deduplicate, as networks can be shared
-				if n not in nets:
+				if n.toDict() not in nets:
 					nets.append(n.rootConf)
 			
 			for v in s.volumes:
@@ -75,9 +77,14 @@ class StackConf:
 					# this will never be none if this check passes
 					vols.append(v.rootConf) #type:ignore
 
+		fnets = {}
+		for n in nets:
+			k = list(n.keys())[0]
+			fnets[k] = list(n.values())[0]
+
 		return {
 			'volumes': {v['name']: v for v in vols},
-			'networks': {n['name']: n for n in nets},
+			'networks': fnets,
 		}
 
 
@@ -160,6 +167,36 @@ class StackConf:
 		)
 		stack += [site, database]
 		return stack
+	
+
+	def toCompose(self):
+		services = {}
+		for s in self.services:
+			buildConf = {}
+			if isinstance(s, DockerBuildMixin):
+				buildConf = {
+					'dockerfile': s.dockerfile,
+					'context': s.context,
+				}
+			
+			services[s.name] = {
+				'image': s.image,
+				'build': buildConf if buildConf else {},
+				'volumes': [vol.full for vol in s.volumes],
+				'environment': [env.full for env in s.environment],
+				'networks': [net.full for net in s.networks],
+				'ports': [port.full for port in s.ports],
+				'labels': [label.full for label in s.labels],
+			}
+
+
+		out = {
+			'name': self.name,
+			'services': services,
+			**self.getRootDictConfs()
+		}
+		# print(out)
+		return out
 
 
 
