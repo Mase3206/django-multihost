@@ -49,8 +49,8 @@ services:
 
       - "DJANGO_DATABASE=prod"
 
-      - "SITE_FOLDER=${SITE_FOLDER:-django}"
-      - "SITE_NAME=${SITE_NAME:?Please set the site name in the '.env' file.}"
+      - "PROJECT_FOLDER=${PROJECT_FOLDER:-django}"
+      - "SITE_PATH=${SITE_PATH:?Please set the site name in the '.env' file.}"
       - "SECRET_KEY=${SECRET_KEY:?Please add a secret key for Django.}"
       - "DEBUG=${DEBUG:-False}"
 
