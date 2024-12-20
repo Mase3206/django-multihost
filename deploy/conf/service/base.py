@@ -52,6 +52,20 @@ class ServiceConf:
 		return ret
 
 
+	def toDict(self):
+		return self.__dict__
+	
+	def __iter__(self):
+		self._iter_index = -1
+		self._iter_items = list(self.__dict__.items())
+		return self
+	
+	def __next__(self):
+		self._iter_index += 1
+		if self._iter_index >= len(self._iter_items):
+			raise StopIteration
+		return self._iter_items[self._iter_index]
+
 	def __repr__(self) -> str:
 		vs: list[str] = []
 		for k, v in self.__dict__.items():

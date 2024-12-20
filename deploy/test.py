@@ -7,7 +7,7 @@ from deploy.conf.service import (
 )
 
 
-stack = StackConf('test')
+stack = StackConf('test this')
 
 db = PostgresConf()
 

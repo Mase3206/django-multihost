@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from deploy import exceptions
+import re
 
 from deploy.conf.service import (
 	ServiceConf,
@@ -13,7 +14,7 @@ from deploy.conf.service import (
 
 class StackConf:
 	def __init__(self, stackName: str) -> None:
-		self.name = stackName
+		self.name = re.sub(r' ', r'_', stackName)
 		# this complains about this type annotation having "no meaning in the 
 		# given context", but it's fine to ignore
 		self.services: list[S] = []  # type: ignore[no-untyped-def]
@@ -74,7 +75,22 @@ class StackConf:
 		}
 	
 
-	# metaclasses
+	def toDict(self):
+		return self.__dict__
+	
+	def __iter__(self):
+		self._iter_index = -1
+		self._iter_items = list(self.__dict__.items())
+		return self
+	
+	def __next__(self):
+		self._iter_index += 1
+		if self._iter_index >= len(self._iter_items):
+			raise StopIteration
+		return self._iter_items[self._iter_index]
+
+
+	# special methods
 	def __str__(self) -> str:
 		return f'{self.name}'
 	
@@ -94,3 +110,12 @@ class StackConf:
 	
 	def __repr__(self) -> str:
 		return f"StackConf(name='{self.name}', services={self.services})"
+
+
+# 	@staticmethod
+# 	def fromDict(rawConf) -> StackConf:
+# 		pass
+
+
+
+# def initFromYaml
