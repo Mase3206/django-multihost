@@ -1,7 +1,9 @@
-from deploy.conf.base import (
+from deploy.conf import (
 	StackConf,
+)
+from deploy.conf.service import (
 	SiteConf,
-	PostgresConf
+	PostgresConf,
 )
 
 
