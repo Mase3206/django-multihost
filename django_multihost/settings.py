@@ -57,6 +57,7 @@ INSTALLED_APPS = [
     # -- Project -- #
 	'sites',
 	'account',
+	'deploy',
 ]
 
 MIDDLEWARE = [
