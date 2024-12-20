@@ -1,0 +1,3 @@
+"""
+THIS IS NOT A DJANGO APP!
+"""

@@ -1,0 +1,68 @@
+name: ${GROUP_NAME:?Please set the group name in the '.env' file.}
+
+services:
+  postgres: 
+    # container_name: postgres
+    image: postgres:17.0
+    volumes:
+      - ./.volumes/db:/var/lib/postgresql/data
+    environment:
+      - "POSTGRES_PASSWORD=${POSTGRES_PASSWORD:?Please set the Postgres password in the '.env' file.}"
+      - "POSTGRES_USER=pguser"
+      - "POSTGRES_DB=pgdb"
+    networks:
+      - default
+
+
+  gunicorn:
+    # container_name: gunicorn
+    image: cs-umt/gunicorn
+    build:
+      dockerfile: /django/source/gunicorn.Dockerfile
+      context: /django/source/
+    # healthcheck:
+      # test: ['CMD', 'curl', '-f', 'http://localhost:8000/']
+      # interval: 5s
+      # timeout: 60s
+      # retries: 10
+    volumes:
+      - ./site:/sites/django
+      - ./.volumes/gunicorn:/run/www/django
+    # ports:
+      # - "8000:8000"
+    networks:
+      - traefik
+      - default
+    labels:
+      - "traefik.enable=true"
+      # set the hostname and path
+      - "traefik.http.routers.gunicorn-${GROUP_NAME}.rule=Host(gunicorn)"
+      - "traefik.http.routers.gunicorn-${GROUP_NAME}.rule=PathPrefix(`/${SITE_NAME}`)"
+      # strip the path away and continue
+      - "traefik.http.routers.gunicorn-${GROUP_NAME}.middlewares=gunicorn-${GROUP_NAME}-stripprefix"
+      - "traefik.http.middlewares.gunicorn-${GROUP_NAME}-stripprefix.stripprefix.prefixes=/${SITE_NAME}"
+      - "traefik.docker.network=traefik"
+    environment:
+      - "POSTGRES_USER=pguser"
+      - "POSTGRES_PASSWORD=${POSTGRES_PASSWORD:?Please set the Postgres password in the '.env' file.}"
+      - "POSTGRES_DB=pgdb"
+
+      - "DJANGO_DATABASE=prod"
+
+      - "SITE_FOLDER=${SITE_FOLDER:-django}"
+      - "SITE_NAME=${SITE_NAME:?Please set the site name in the '.env' file.}"
+      - "SECRET_KEY=${SECRET_KEY:?Please add a secret key for Django.}"
+      - "DEBUG=${DEBUG:-False}"
+
+
+volumes:
+  postgres: {}
+  gunicorn: {}
+
+networks:
+  default:
+    name: ${GROUP_NAME}_default
+  traefik:
+    name: traefik
+    external: true
+    
