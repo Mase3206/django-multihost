@@ -112,18 +112,18 @@ class SiteDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 # 	pass
 # 	model = Site
 	# hostname_parts = get_hostname_parts()
-	# if hostname_parts[1] == settings.DEPLOYMENT_START_PORT:
-	# 	raise ImproperlyConfigured('The DEPLOYMENT_START_PORT must be set to a port other than the used by this public-facing frontend.')
+	# if hostname_parts[1] == settings.DEPLOY_START_PORT:
+	# 	raise ImproperlyConfigured('The DEPLOY_START_PORT must be set to a port other than the used by this public-facing frontend.')
 
 	# base_url = 'https' if settings.HTTPS else 'http' + '://' + hostname_parts[0]
-	# upstream = base_url + f':{settings.DEPLOYMENT_START_PORT + 1}'
+	# upstream = base_url + f':{settings.DEPLOY_START_PORT + 1}'
 
 
 	# def upstream(self, value):
-	# 	# self._upstream = self.base_url + f':{settings.DEPLOYMENT_START_PORT + self.get_object().pk}'
-	# 	self._upstream = self.base_url + f':{settings.DEPLOYMENT_START_PORT + 1}'
+	# 	# self._upstream = self.base_url + f':{settings.DEPLOY_START_PORT + self.get_object().pk}'
+	# 	self._upstream = self.base_url + f':{settings.DEPLOY_START_PORT + 1}'
 	# 	self.kwargs.pop('pk')
-		# url = self.base_url + f':{settings.DEPLOYMENT_START_PORT + site.pk}'
+		# url = self.base_url + f':{settings.DEPLOY_START_PORT + site.pk}'
 
 # 	def dispatch(self, request, path):
 # 		return super().dispatch(request, path)
@@ -134,5 +134,5 @@ class SiteDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 # 	hostname_parts = get_hostname_parts()
 # 	base_url = 'https' if settings.HTTPS else 'http' + '://' + hostname_parts[0]
 
-# 	remote_url = base_url + str(settings.DEPLOYMENT_START_PORT + kwargs.pop('pk'))
+# 	remote_url = base_url + str(settings.DEPLOY_START_PORT + kwargs.pop('pk'))
 # 	return proxy_view(request, remote_url, extra_requests_args)
