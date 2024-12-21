@@ -40,6 +40,7 @@ INSTALLED_APPS = [
 	# -- Built-ins -- #
     'django.contrib.admin',
     'django.contrib.auth',
+	'polymorphic',  # this needs to be before conttenttypes
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
@@ -171,4 +172,5 @@ CRISPY_ALLOWED_TEMPLATE_PACKS = (
 HTTPS = False
 HOSTNAME = 'localhost:8000'
 
-DEPLOYMENT_START_PORT = 8000
+
+from .deploy import *
