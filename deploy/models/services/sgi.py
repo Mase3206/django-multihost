@@ -36,3 +36,6 @@ class Gunicorn(models.Model):
 		Postgres,
 		on_delete=models.DO_NOTHING  # this is only used for sharing the environment variables between the two, such as for db creds
 	)
+
+	class Meta:
+		verbose_name_plural = 'gunicorn containers'

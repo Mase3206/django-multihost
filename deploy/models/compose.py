@@ -28,6 +28,12 @@ class Deployment(models.Model):
 	pk: int
 
 	git_repo = models.URLField()
+	online = models.BooleanField(default=False, null=True)
+	modified = models.BooleanField(
+		default=False,
+		null=True,
+		help_text="Deployment settings have been modified, but the deployed Docker Compose stack has not been restarted."
+	)
 
 	@property
 	def git_folder(self):
@@ -43,11 +49,15 @@ class Deployment(models.Model):
 
 	sgi_server = models.OneToOneField(
 		Gunicorn,
-		on_delete=models.CASCADE  
+		on_delete=models.CASCADE,
+		blank=True,
+		null=True,
 	)
 	database = models.OneToOneField(
 		Postgres,
-		on_delete=models.CASCADE
+		on_delete=models.CASCADE,
+		blank=True,
+		null=True,
 	)
 
 
@@ -92,3 +102,8 @@ class Deployment(models.Model):
 
 
 		super().delete(*args, **kwargs)
+
+
+	# def __str__(self):
+		# return f'Deployment for {self.site}'
+		# pass

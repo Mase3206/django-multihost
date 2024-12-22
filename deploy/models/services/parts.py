@@ -4,7 +4,9 @@ Parts of a Docker Compose service definition: volumes, environment variables, et
 
 from django.db import models
 from django.core.validators import RegexValidator
+from django.core.exceptions import ValidationError
 from django.conf import settings
+import os
 """
 - DEPLOY_GIT_ROOT
 - DEPLOY_VOL_ROOT
@@ -12,11 +14,19 @@ from django.conf import settings
 """
 
 
+def validate_and_create_path(value):
+	full_path = os.path.join(settings.DEPLOY_VOL_ROOT, value)
+	if not os.path.exists(full_path):
+		try:
+			os.makedirs(full_path)
+		except OSError as e:
+			raise ValidationError(f"Cannot create directory: {full_path}. Error: {e}")
+
 class Volume(models.Model):
 	"""
 	Docker Compose folder-bind-type volume mount object.
 	"""
-	host_path = models.FilePathField(path=settings.DEPLOY_VOL_ROOT)
+	host_path = models.CharField(max_length=255, validators=[validate_and_create_path])
 	guest_path = models.CharField(max_length=50, blank=False)
 	mode = models.CharField(max_length=3, choices=(
 		('', 'Read/write (default)'),

@@ -44,3 +44,6 @@ class Postgres(models.Model):
 		default='pgpass',
 		help_text='The password of the database user. Randomly generated passwords (up to 128 chars long) are highly recommended.'
 	)
+
+	class Meta:
+		verbose_name_plural = 'postgres containers'

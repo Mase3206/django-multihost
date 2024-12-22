@@ -1,8 +1,9 @@
 from . import Path
+from . import BASE_DIR
 
 DEPLOY_START_PORT = 8000
 
-DEPLOY_DATA_ROOT = Path(__file__).resolve().parent.parent / 'deploydata'
+DEPLOY_DATA_ROOT = BASE_DIR / 'deploydata'
 
 DEPLOY_GIT_ROOT = DEPLOY_DATA_ROOT / 'git'
 DEPLOY_VOL_ROOT = DEPLOY_DATA_ROOT / 'volumes'
