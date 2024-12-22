@@ -1,9 +1,32 @@
 from django.db import models
-from . import Service
 from .db import Postgres
 
+from .parts import (
+	Volume,
+	Network,
+	EnvironmentVariable,
+	Label,
+)
 
-class Gunicorn(Service):
+
+class Gunicorn(models.Model):
+	volumes = models.ManyToManyField(
+		Volume,
+		related_name='services'
+	)
+	networks = models.ManyToManyField(
+		Network,
+		related_name='services'
+	)
+	environment = models.ManyToManyField(
+		EnvironmentVariable,
+		related_name='services'
+	)
+	labels = models.ManyToManyField(
+		Label,
+		related_name='services'
+	)
+
 	django_project_folder = models.CharField(
 		max_length=30, 
 		blank=False,

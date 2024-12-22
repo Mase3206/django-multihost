@@ -1,9 +1,31 @@
 from django.db import models
 
-from . import Service
+from .parts import (
+	Volume,
+	Network,
+	EnvironmentVariable,
+	Label,
+)
 
 
-class Postgres(Service):
+class Postgres(models.Model):
+	volumes = models.ManyToManyField(
+		Volume,
+		related_name='services'
+	)
+	networks = models.ManyToManyField(
+		Network,
+		related_name='services'
+	)
+	environment = models.ManyToManyField(
+		EnvironmentVariable,
+		related_name='services'
+	)
+	labels = models.ManyToManyField(
+		Label,
+		related_name='services'
+	)
+	
 	name = models.CharField(
 		max_length=40,
 		blank=False,
