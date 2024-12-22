@@ -8,7 +8,6 @@ from django.core.exceptions import ValidationError
 from django.conf import settings
 import os
 """
-- DEPLOY_GIT_ROOT
 - DEPLOY_VOL_ROOT
 - DEPLOY_COMPOSE_ROOT
 """

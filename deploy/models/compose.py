@@ -4,12 +4,10 @@ from django.db import models
 
 from django.conf import settings
 """
-- DEPLOY_GIT_ROOT
 - DEPLOY_VOL_ROOT
 - DEPLOY_COMPOSE_ROOT
 """
 
-DEPLOY_GIT_ROOT = Path(settings.DEPLOY_GIT_ROOT)
 DEPLOY_VOL_ROOT = Path(settings.DEPLOY_VOL_ROOT)
 DEPLOY_COMPOSE_ROOT = Path(settings.DEPLOY_COMPOSE_ROOT)
 
@@ -34,10 +32,6 @@ class Deployment(models.Model):
 		null=True,
 		help_text="Deployment settings have been modified, but the deployed Docker Compose stack has not been restarted."
 	)
-
-	@property
-	def git_folder(self):
-		return DEPLOY_GIT_ROOT / str(self.pk)
 
 	@property
 	def volumes_folder(self):
