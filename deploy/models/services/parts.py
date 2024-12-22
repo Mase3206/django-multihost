@@ -51,7 +51,7 @@ env_var_name_validator = RegexValidator(
 	'Only uppercase ASCII letters and the underscore character are permitted in environment variable names.'
 )
 """Limits the characters allowed when entering env var names."""
-class EironmentVariable(models.Model):
+class EnvironmentVariable(models.Model):
 	"""
 	Docker Compose environment variable object.
 	"""
