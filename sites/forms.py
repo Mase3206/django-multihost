@@ -8,11 +8,8 @@ class SiteForm(ModelForm):
 		model = Site
 		fields = [
 			'name',
-			'path',
-			'remote_repo',
 			'description',
 			'description_brief',
-			'use_bundled_db'
 		]
 		widgets = {
 			'description_brief': Textarea(attrs={'rows': 3}),
@@ -20,7 +17,6 @@ class SiteForm(ModelForm):
 		}
 
 		help_texts = {
-			'use_bundled_db': 'Use a bundled Postgres database instead of a manually-configured one.',
-			'path': 'Not sure what I thought this would be used for. It is currently unused.',
+			# 'use_bundled_db': 'Use a bundled Postgres database instead of a manually-configured one.',   # TODO - move this to deploy.forms
 			'description': 'CommonMark-compliant Markdown formatting is accepted.'
 		}

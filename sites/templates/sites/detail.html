@@ -27,9 +27,9 @@
 
 <hr />
 <ul class="site-links">
-	<li>
+	{% comment %} <li>
 		Git repo: <a href="{{ site.remote_repo }}">{{ site.remote_repo }}</a>
-	</li>
+	</li> {% endcomment %}
 	<li>
 		Deployed Site: {% comment %}<a href="{% url 'sites:deployment' pk=site.pk %}">{% url 'sites:deployment' pk=site.pk %}</a>{% endcomment %}
 	</li>
