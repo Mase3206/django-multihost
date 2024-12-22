@@ -1,4 +1,4 @@
-from pathlib import Path
+from . import Path
 
 DEPLOY_START_PORT = 8000
 
