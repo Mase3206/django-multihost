@@ -40,7 +40,6 @@ INSTALLED_APPS = [
 	# -- Built-ins -- #
     'django.contrib.admin',
     'django.contrib.auth',
-	'polymorphic',  # this needs to be before conttenttypes
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
