@@ -1,10 +1,10 @@
-from .compose import (
-	DeploymentWizardForm,
-)
-from .services import (
-	GunicornWizardForm,
-	PostgresWizardForm,
-)
+# from .compose import (
+# 	DeploymentQuickcreateForm,
+# )
+# from .services import (
+# 	GunicornQuickcreateForm,
+# 	PostgresQuickcreateForm,
+# )
 from .parts import (
 	VolumeForm,
 	NetworkForm,

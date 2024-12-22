@@ -70,7 +70,7 @@ class Deployment(models.Model):
 		"""
 		cmd = [
 			'docker', 'compose', 
-			'-f', f'{self.compose_file:s}',
+			'-f', f'{self.compose_file}',
 			subcommand, *args
 		]
 		return subprocess.run(

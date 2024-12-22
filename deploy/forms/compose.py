@@ -5,7 +5,9 @@ from deploy.models.compose import (
 )
 
 
-class DeploymentWizardForm(ModelForm):
+class DeploymentQuickcreateForm(ModelForm):
+
+
 	class Meta:
 		model = Deployment
 		fields = [

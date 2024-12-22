@@ -1,4 +1,7 @@
 from django.db import models
+from django.db.models.signals import post_delete
+from django.dispatch import receiver
+
 
 from deploy.models import Deployment
 
@@ -7,7 +10,7 @@ class Site(models.Model):
 	name = models.CharField(max_length=30, blank=False, null=False)
 	deployment = models.OneToOneField(
 		Deployment, 
-		on_delete=models.CASCADE,
+		on_delete=models.SET_NULL,
 		related_name='site',
 		blank=True,
 		null=True
@@ -19,3 +22,8 @@ class Site(models.Model):
 	def __str__(self) -> str:
 		return f'{self.name}'
 	
+
+@receiver(post_delete, sender=Site)
+def delete_orphaned_deployment(sender, instance, **kwargs):
+	if instance.deployment:
+		instance.deployment.delete()

@@ -34,7 +34,9 @@ class Gunicorn(models.Model):
 	)
 	database = models.OneToOneField(
 		Postgres,
-		on_delete=models.DO_NOTHING  # this is only used for sharing the environment variables between the two, such as for db creds
+		on_delete=models.DO_NOTHING,  # this is only used for sharing the environment variables between the two, such as for db creds
+		blank=True,
+		null=True
 	)
 
 	class Meta:

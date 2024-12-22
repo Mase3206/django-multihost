@@ -22,6 +22,7 @@ django-extensions = "^3.2.3"
 django-crispy-forms = "^2.3"
 crispy-bulma = "^0.11.0"
 pyyaml = "^6.0.2"
+django-betterforms = "^2.0.0"
 
 
 [tool.poetry.scripts]

@@ -38,6 +38,7 @@ INSTALLED_APPS = [
 	'crispy_bulma',
 	# 'revproxy.apps.RevProxyConfig',
 	# 'proxy',
+	'betterforms',
 	
     # -- Project -- #
 	'sites',

@@ -8,7 +8,7 @@ from deploy.models.services.db import (
 )
 
 
-class GunicornWizardForm(ModelForm):
+class GunicornQuickcreateForm(ModelForm):
 	class Meta:
 		model = Gunicorn
 		fields = [
@@ -29,7 +29,7 @@ class GunicornWizardForm(ModelForm):
 		]
 
 
-class PostgresWizardForm(ModelForm):
+class PostgresQuickcreateForm(ModelForm):
 	class Meta:
 		model = Postgres
 		fields = [
