@@ -75,7 +75,7 @@ class EnvironmentVariable(models.Model):
 			return f"{self.name}=''"
 		
 
-class Label:
+class Label(models.Model):
 	"""
 	Docker Compose label object.
 	"""
