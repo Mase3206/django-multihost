@@ -39,5 +39,8 @@ class Gunicorn(models.Model):
 		null=True
 	)
 
+	def __str__(self) -> str:
+		return f'Gunicorn container {self.pk}'
+
 	class Meta:
 		verbose_name_plural = 'gunicorn containers'

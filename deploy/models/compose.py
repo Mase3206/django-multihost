@@ -46,6 +46,7 @@ class Deployment(models.Model):
 		on_delete=models.CASCADE,
 		blank=True,
 		null=True,
+		verbose_name="SGI server"
 	)
 	database = models.OneToOneField(
 		Postgres,
@@ -98,6 +99,8 @@ class Deployment(models.Model):
 		super().delete(*args, **kwargs)
 
 
-	# def __str__(self):
-		# return f'Deployment for {self.site}'
-		# pass
+	def __str__(self):
+		if self.site:
+			return f'Deployment for "{self.site}"'
+		else:
+			return f'Deployment object {self.pk} (unlinked)'

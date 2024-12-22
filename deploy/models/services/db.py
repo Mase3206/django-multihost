@@ -26,5 +26,8 @@ class Postgres(models.Model):
 		related_name='postgres'
 	)
 
+	def __str__(self) -> str:
+		return f'Postgres container {self.pk}'
+
 	class Meta:
 		verbose_name_plural = 'postgres containers'

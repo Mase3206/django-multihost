@@ -6,6 +6,7 @@ from django.db import models
 from django.core.validators import RegexValidator
 from django.core.exceptions import ValidationError
 from django.conf import settings
+
 import os
 """
 - DEPLOY_VOL_ROOT
@@ -40,6 +41,10 @@ class Volume(models.Model):
 			return f'{self.host_path}:{self.guest_path}'
 		else:
 			return f'{self.host_path}:{self.guest_path}:{self.mode}'
+		
+	def __str__(self) -> str:
+		split = self.host_path.split('/')[-2:]
+		return f'Volume "{split[1]}" for Deployment {split[0]}'
 
 
 class Network(models.Model):
@@ -53,6 +58,9 @@ class Network(models.Model):
 	def compose(self) -> str:
 		"""Return object in a Compose-compatable format."""
 		return f'{self.name}'
+	
+	def __str__(self) -> str:
+		return f'Network "{self.name}"' + (' (external)' if self.external else '')
 	
 
 env_var_name_validator = RegexValidator(
@@ -83,6 +91,9 @@ class EnvironmentVariable(models.Model):
 		else:
 			return f"{self.name}=''"
 		
+	def __str__(self) -> str:
+		return f'({self.pk}) {self.name}'
+		
 
 class Label(models.Model):
 	"""
@@ -103,3 +114,6 @@ class Label(models.Model):
 	def compose(self) -> str:
 		"""Return object in a Compose-compatable format."""
 		return f'{self.name}={self.value}'
+	
+	def __str__(self) -> str:
+		return f'({self.pk}) {self.compose}'
