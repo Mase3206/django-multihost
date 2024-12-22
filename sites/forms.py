@@ -13,7 +13,7 @@ class SiteForm(ModelForm):
 		]
 		widgets = {
 			'description_brief': Textarea(attrs={'rows': 3}),
-			'description': Textarea(attrs={'rows': 6}),
+			'description': Textarea(attrs={'rows': 12}),
 		}
 
 		help_texts = {
