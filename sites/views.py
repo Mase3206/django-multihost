@@ -1,4 +1,5 @@
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.http import HttpResponse
 from django.contrib.auth.mixins import (
 	AccessMixin, # control what happens if 403
 	LoginRequiredMixin, # ensure user is logged in
@@ -93,6 +94,11 @@ class SiteDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
 
 
+def site_deployment_husk_view(request, pk: int = ...): #type:ignore
+	"""
+	This FBV doesn't render anything. It's sole purpose is to be something the URL dispatcher can point to in the urlconf. Traefik is configured to look for this URL and take over from there doing its proxy/path-strip thing.
+	"""
+	return HttpResponse()
 
 
 

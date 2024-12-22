@@ -4,7 +4,8 @@ from .views import (
 	SiteDetailView, 
 	SiteCreationView, 
 	SiteUpdateView,
-	SiteDeleteView
+	SiteDeleteView,
+	site_deployment_husk_view
 )
 
 from django.views.generic import View
@@ -16,5 +17,5 @@ urlpatterns = [
 	path('create/', SiteCreationView.as_view(), name='create'),
 	path('<int:pk>/update/', SiteUpdateView.as_view(), name='update'),
 	path('<int:pk>/delete/', SiteDeleteView.as_view(), name='delete'),
-	path('<int:pk>/view/', View.as_view(), name='view')
+	path('<int:pk>/view/', site_deployment_husk_view, name='view'), # this is just here to 
 ]
