@@ -11,21 +11,21 @@ from .parts import (
 class Postgres(models.Model):
 	volumes = models.ManyToManyField(
 		Volume,
-		related_name='services'
+		related_name='postgres'
 	)
 	networks = models.ManyToManyField(
 		Network,
-		related_name='services'
+		related_name='postgres'
 	)
 	environment = models.ManyToManyField(
 		EnvironmentVariable,
-		related_name='services'
+		related_name='postgres'
 	)
 	labels = models.ManyToManyField(
 		Label,
-		related_name='services'
+		related_name='postgres'
 	)
-	
+
 	name = models.CharField(
 		max_length=40,
 		blank=False,

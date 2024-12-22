@@ -12,19 +12,19 @@ from .parts import (
 class Gunicorn(models.Model):
 	volumes = models.ManyToManyField(
 		Volume,
-		related_name='services'
+		related_name='gunicorn'
 	)
 	networks = models.ManyToManyField(
 		Network,
-		related_name='services'
+		related_name='gunicorn'
 	)
 	environment = models.ManyToManyField(
 		EnvironmentVariable,
-		related_name='services'
+		related_name='gunicorn'
 	)
 	labels = models.ManyToManyField(
 		Label,
-		related_name='services'
+		related_name='gunicorn'
 	)
 
 	django_project_folder = models.CharField(
