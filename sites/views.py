@@ -6,7 +6,7 @@ from django.contrib.auth.mixins import (
     UserPassesTestMixin, # extra conditions that, if failed, throw a 403
 )
 
-from django.views.generic.detail import SingleObjectMixin
+from account.models import CustomUser
 from django.conf import settings
 from django.urls import reverse_lazy, reverse
 
@@ -91,6 +91,11 @@ class SiteDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 		Ensure the user is permitted to delete sites.
 		"""
 		return self.request.user.has_perm('sites.delete_site') #type:ignore
+	
+	def get_context_data(self, **kwargs) -> dict:
+		context = super().get_context_data(**kwargs)
+		context['site_owners'] = CustomUser.objects.filter(associated_site=self.get_object())
+		return context
 
 
 
