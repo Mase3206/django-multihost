@@ -17,6 +17,9 @@ import json
 from .services import Gunicorn
 from .services import Postgres
 
+from django.db.models.signals import pre_delete
+from deploy.models.deletion import full_delete_deployment
+
 
 
 class Deployment(models.Model):
@@ -92,15 +95,11 @@ class Deployment(models.Model):
 		return json.loads(out.stdout)
 
 
-	def delete(self, *args, **kwargs):
-		self.down()
-
-
-		super().delete(*args, **kwargs)
-
-
 	def __str__(self):
 		if self.site:  # reverse oto association #type:ignore
 			return f'Deployment for "{self.site}"' #type:ignore
 		else:
 			return f'Deployment object {self.pk} (unlinked)'
+
+
+pre_delete.connect(full_delete_deployment, sender=Deployment)

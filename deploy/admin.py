@@ -29,6 +29,7 @@ class DeploymentAdmin(admin.ModelAdmin):
 class GunicornAdmin(admin.ModelAdmin):
 	fields = []
 	list_display = [
+		'__str__',
 		'deployment',
 		'database',
 		# 'online',
