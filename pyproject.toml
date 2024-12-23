@@ -12,7 +12,6 @@ psycopg = {extras = ["binary"], version = "^3.2.3"}
 django = "^5"
 whitenoise = "^6.8"
 environs = "^11.2.1"
-docker = "^7.1.0"
 packaging = "^24.2"
 setuptools = "^75.6.0"
 django-debug-toolbar = "^4.4.6"
@@ -26,7 +25,7 @@ django-betterforms = "^2.0.0"
 
 
 [tool.poetry.scripts]
-manage = 'django.core.management:execute_from_command_line'
+manage = 'manage:main'
 
 
 [build-system]
