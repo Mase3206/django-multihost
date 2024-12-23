@@ -59,7 +59,10 @@ cover/
 *.log
 local_settings.py
 db.sqlite3
+db.sqlite3.bak
 db.sqlite3-journal
+# collected static files
+staticfiles/
 
 # Flask stuff:
 instance/
@@ -175,3 +178,6 @@ from_bulma/
 
 # Misc.
 **/*.DS_Store
+
+# DMH-specific stuff
+deploydata/

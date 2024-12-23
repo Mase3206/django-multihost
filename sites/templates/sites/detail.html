@@ -3,7 +3,7 @@
 
 {% block content %}
 
-<div class="is-flex is-justify-content-space-between is-align-items-flex-end">
+<div class="is-flex is-justify-content-space-between">
 	<div class="is-flex is-align-items-flex-end">
 		<h2 class="mb-0 mr-3">{{ site.name }}</h2>
 		{% if user.associated_site == site %}
@@ -12,28 +12,68 @@
 	</div>
 
 	<div class="buttons">
-		{% if user.associated_site == site %}
-			<a href="{% url "sites:update" pk=object.pk %}" class="button is-small is-info">Edit</a>
+		{% if site.deployment %}
+			{% comment %} <a href="{% url "deploy:quickcreate" site_pk=site.pk %}" class="button is-small">Edit deployment</a> {% endcomment %}
+			<a href="{% url "sites:view" pk=site.pk %}" class="button is-small is-primary">View site</a>
+		{% elif user.associated_site == site %}
+			<a href="{% url "deploy:quickcreate" site_pk=site.pk %}" class="button is-small is-primary">Create deployment</a>
 		{% elif user.is_superuser or perms.sites.change_site %}
-			<a href="{% url "sites:update" pk=object.pk %}" class="button is-small is-warning" title="You are about to edit someone else's site!">Edit</a>
+			<a href="{% url "deploy:quickcreate" site_pk=site.pk %}" class="button is-small is-warning" title="You are about to create a deployment on someone else's site!">Create deployment</a>
+		{% endif %}
+
+
+		{% if user.associated_site == site %}
+			<a href="{% url "sites:update" pk=site.pk %}" class="button is-small is-info">Edit</a>
+		{% elif user.is_superuser or perms.sites.change_site %}
+			<a href="{% url "sites:update" pk=site.pk %}" class="button is-small is-warning" title="You are about to edit someone else's site!">Edit</a>
 		{% endif %}
 
 
 		{% if user.is_superuser or perms.sites.change_site %}
-			<a href="{% url "sites:delete" pk=object.pk %}" class="button is-small is-danger">Delete</a>
+			<a href="{% url "sites:delete" pk=site.pk %}" class="button is-small is-danger" title="You are about to delete someone else's site!">Delete</a>
+		{% endif %}
+
+		
+		{% if not user.associated_site %}
+			<a href="{% url "sites:join" pk=site.pk %}" class="button is-small is-info">Join site</a>
 		{% endif %}
 	</div>
 </div>
 
 <hr />
-<ul class="site-links">
-	<li>
-		Git repo: <a href="{{ site.remote_repo }}">{{ site.remote_repo }}</a>
-	</li>
-	<li>
-		Deployed Site: {% comment %}<a href="{% url 'sites:deployment' pk=site.pk %}">{% url 'sites:deployment' pk=site.pk %}</a>{% endcomment %}
-	</li>
-</ul>
+<div class="is-flex is-justify-content-space-between is-align-items-flex-end">
+	<ul class="site-links mt-0 mb-0">
+	{% if site.deployment %}
+		<li>
+			Git repo: <a href="{{ site.deployment.git_repo }}">{{ site.deployment.git_repo }}</a>
+		</li>
+	{% else %}
+		<li>
+			This group hasn't configured their deployment yet, so no data can be shown here.
+		</li>
+	{% endif %}
+	</ul>
+
+	{% if site.deployment %}
+		<div class="deploy-status-dots">
+		{% if site.deployment.online %}
+			{% if site.deployment.modified %}
+				<span class="icon is-small has-text-warning">
+					<i class="fas fa-circle"></i>
+				</span>
+			{% else %}
+				<span class="icon is-small has-text-success">
+					<i class="fas fa-circle"></i>
+				</span>
+			{% endif %}
+		{% else %}
+			<span class="icon is-small has-text-danger">
+				<i class="fas fa-circle"></i>
+			</span>
+		{% endif %}
+		</div>
+	{% endif %}
+</div>
 <hr />
 
 <p>{{ site.description|markdown|safe }}</p>

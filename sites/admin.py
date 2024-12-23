@@ -7,15 +7,10 @@ from .models import Site
 class SiteAdmin(admin.ModelAdmin):
 	fields = [
 		'name',
-		'path',
-		'remote_repo',
 		'description',
 		'description_brief',
-		'use_bundled_db',
+		'deployment',
 	]
 	list_display = [
 		'name',
-		'path',
-		'remote_repo',
-		'use_bundled_db',
 	]

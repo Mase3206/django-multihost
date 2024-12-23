@@ -1,6 +1,6 @@
 import random, string
 
-def randomString(length: int):
+def random_string(length: int):
 	upper = list(string.ascii_uppercase)
 	lower = list(string.ascii_lowercase)
 	numbers = list(range(0, 10))

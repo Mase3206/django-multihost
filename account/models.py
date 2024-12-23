@@ -6,7 +6,7 @@ class CustomUser(AbstractUser):
 	associated_site = models.ForeignKey(
 		Site, 
 		on_delete=models.CASCADE,
-		blank=False,
+		blank=True,
 		null=True
 	)
 	github_username = models.CharField(

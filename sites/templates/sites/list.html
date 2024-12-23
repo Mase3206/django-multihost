@@ -2,7 +2,7 @@
 
 {% block content %}
 
-{% if user.is_superuser or perms.sites.change_site %}
+{% if not user.associated_site %}
 <div class="buttons is-right mb-4">
 	<a href="{% url 'sites:create' %}" class="button is-primary">New</a>
 </div>
