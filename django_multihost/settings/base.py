@@ -1,4 +1,4 @@
-from . import BASE_DIR
+from . import BASE_DIR, env, Path
 
 
 
@@ -85,11 +85,21 @@ WSGI_APPLICATION = 'django_multihost.wsgi.application'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 DATABASES = {
-    'default': {
+    'dev': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
+    },
+	'prod-sqlite3': {
+        'ENGINE': 'django.db.backends.sqlite3',
+		'NAME': Path('/var/dmh/db.sqlite3')
     }
 }
+
+
+# defaults to local if not set in environment variable
+default_database = env.str('DJANGO_DATABASE', default='dev')
+# sets detected database to default
+DATABASES['default'] = DATABASES[default_database]
 
 
 # Password validation

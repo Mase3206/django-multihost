@@ -178,3 +178,6 @@ from_bulma/
 
 # Misc.
 **/*.DS_Store
+
+# DMH-specific stuff
+deploydata/

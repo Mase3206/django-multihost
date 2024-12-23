@@ -6,7 +6,7 @@ services:
     command:
       - --api.insecure=true
       - --providers.docker
-      - --log.level=DEBUG
+      # - --log.level=DEBUG
       # - --providers.docker.exposedByDefault=false
       - --accessLog
     ports:
@@ -17,6 +17,12 @@ services:
 
   gunicorn:
     image: dmh:testing
+    volumes:
+      - ./.volumes/gunicorn:/var/dmh
+    environment:
+      DJANGO_SUPERUSER_USERNAME: admin
+      DJANGO_SUPERUSER_EMAIL: admin@localhost
+      DJANGO_SUPERUSER_PASSWORD: password
     labels:
       - "traefik.enable=true"
       # set the path
