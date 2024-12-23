@@ -100,7 +100,7 @@ class Deployment(models.Model):
 
 
 	def __str__(self):
-		if self.site:
-			return f'Deployment for "{self.site}"'
+		if self.site:  # reverse oto association #type:ignore
+			return f'Deployment for "{self.site}"' #type:ignore
 		else:
 			return f'Deployment object {self.pk} (unlinked)'
