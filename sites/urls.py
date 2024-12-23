@@ -5,6 +5,7 @@ from .views import (
 	SiteCreationView, 
 	SiteUpdateView,
 	SiteDeleteView,
+	SiteJoinView,
 	site_deployment_husk_view
 )
 
@@ -17,5 +18,6 @@ urlpatterns = [
 	path('create/', SiteCreationView.as_view(), name='create'),
 	path('<int:pk>/update/', SiteUpdateView.as_view(), name='update'),
 	path('<int:pk>/delete/', SiteDeleteView.as_view(), name='delete'),
+	path('<int:pk>/join/', SiteJoinView.as_view(), name='join'),
 	path('<int:pk>/view/', site_deployment_husk_view, name='view'), # this is just here to 
 ]

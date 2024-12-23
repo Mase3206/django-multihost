@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% comment %} {% load markdown_extras %} {% endcomment %}
+
+{% block content %}
+
+<p>
+	Are you sure you want to join <strong>{{ site }}</strong>?
+</p>
+
+<form action="" method="post">{% csrf_token %}
+	<button type="submit" class="button">Yes</button>
+</form>
+
+{% endblock content %}

@@ -32,6 +32,11 @@
 		{% if user.is_superuser or perms.sites.change_site %}
 			<a href="{% url "sites:delete" pk=site.pk %}" class="button is-small is-danger" title="You are about to delete someone else's site!">Delete</a>
 		{% endif %}
+
+		
+		{% if not user.associated_site %}
+			<a href="{% url "sites:join" pk=site.pk %}" class="button is-small is-info">Join site</a>
+		{% endif %}
 	</div>
 </div>
 

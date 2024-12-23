@@ -1,3 +1,4 @@
+from django.forms import BaseModelForm
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.http import HttpResponse
 from django.contrib.auth.mixins import (
@@ -96,6 +97,31 @@ class SiteDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 		context = super().get_context_data(**kwargs)
 		context['site_owners'] = CustomUser.objects.filter(associated_site=self.get_object())
 		return context
+
+
+
+class SiteJoinView(LoginRequiredMixin, UpdateView):
+	model = CustomUser
+	fields = ['associated_site']
+	exclude = ['associated_site']
+	login_url = settings.LOGIN_URL
+	template_name = 'sites/join.html'
+
+	def get_context_data(self, **kwargs) -> dict:
+		context = super().get_context_data(**kwargs)
+		context['site'] = Site.objects.get(pk=self.kwargs['pk'])
+		return context
+	
+	def get_success_url(self) -> str:
+		return reverse('sites:detail', kwargs={'pk': self.kwargs['pk']})
+	
+	def form_valid(self, form: BaseModelForm) -> HttpResponse:
+		# form.save(commit=False)
+		obj = CustomUser.objects.get(pk=self.request.user.pk)
+		obj.associated_site = Site.objects.get(pk=self.kwargs['pk'])
+		obj.save()
+
+		return super().form_valid(form)
 
 
 
