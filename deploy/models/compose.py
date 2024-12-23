@@ -46,14 +46,14 @@ class Deployment(models.Model):
 
 	sgi_server = models.OneToOneField(
 		Gunicorn,
-		on_delete=models.CASCADE,
+		on_delete=models.SET_NULL,
 		blank=True,
 		null=True,
 		verbose_name="SGI server"
 	)
 	database = models.OneToOneField(
 		Postgres,
-		on_delete=models.CASCADE,
+		on_delete=models.SET_NULL,
 		blank=True,
 		null=True,
 	)

@@ -39,8 +39,6 @@ def full_delete_gunicorn(gunicorn, using):
 		print(f' - deleting {str(gl)}')
 		gl.delete()
 
-	gunicorn.delete()
-
 
 def full_delete_postgres(postgres, using):
 	pvols = postgres.volumes.all()
@@ -74,23 +72,25 @@ def full_delete_postgres(postgres, using):
 		print(f' - deleting {str(pl)}')
 		pl.delete()
 
-	postgres.delete()
-
 
 def full_delete_deployment(sender, instance, using, *args, **kwargs):
 	print(f'Deleting {str(instance)}')
 
-	print(f'Deleting {str(instance.sgi_server)}')
+	sgi = instance.sgi_server
+	print(f'Deleting {str(sgi)}')
 	full_delete_gunicorn(
-		instance.sgi_server, 
+		sgi, 
 		using
 	)
+	sgi.delete()
 	
-	print(f'Deleting {str(instance.database)}')
+	db = instance.database
+	print(f'Deleting {str(db)}')
 	full_delete_postgres(
-		instance.database,
+		db,
 		using
 	)
+	db.delete()
 
 
 
