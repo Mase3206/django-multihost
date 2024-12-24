@@ -115,11 +115,38 @@ class SiteJoinView(LoginRequiredMixin, UpdateView):
 	def get_success_url(self) -> str:
 		return reverse('sites:detail', kwargs={'pk': self.kwargs['pk']})
 	
+	def get_form(self, form_class: BaseModelForm | None = None) -> BaseModelForm:
+		"""
+		Set the associated_site field (hidden) to link the PK'd site to the user account that is currently signed in. 
+
+		This seems to be a critical step.
+		"""
+		form = super().get_form(form_class) #type:ignore
+		form.initial['associated_site'] = Site.objects.get(pk=self.kwargs['pk'])
+
+		return form
+	
 	def form_valid(self, form: BaseModelForm) -> HttpResponse:
-		# form.save(commit=False)
-		obj = CustomUser.objects.get(pk=self.request.user.pk)
+		"""
+		Set the that the associated_site field (hidden) to the PK'd site (again, which is required for some reason) on signed-in user and save the user.
+		
+		If, after doing this, the field is stil not set correctly, an AssertionError will be raised.
+		
+		If not, then save the form.
+		"""
+		obj: CustomUser = form.save(commit=False)
+
 		obj.associated_site = Site.objects.get(pk=self.kwargs['pk'])
 		obj.save()
+
+		assert obj.associated_site == Site.objects.get(pk=self.kwargs['pk']), 'obj.associated_site field was not correctly set!'
+
+		# obj = CustomUser.objects.get(pk=self.request.user.pk)
+		# site = Site.objects.get(pk=self.kwargs['pk'])
+		# obj.associated_site = site
+		# obj.save(update_fields=['associated_site'])
+
+		form.save()
 
 		return super().form_valid(form)
 

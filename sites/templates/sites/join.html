@@ -8,6 +8,10 @@
 	Are you sure you want to join <strong>{{ site }}</strong>?
 </p>
 
+<ul>
+	<li>{{ user }}</li>
+</ul>
+
 <form action="" method="post">{% csrf_token %}
 	<button type="submit" class="button">Yes</button>
 </form>
