@@ -16,7 +16,10 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
 
   gunicorn:
-    image: dmh:testing
+    # image: dmh:testing
+    build:
+      dockerfile: ./dockerfiles/dmh/Dockerfile
+      context: ..
     volumes:
       - ./.volumes/gunicorn:/var/dmh
     environment:
