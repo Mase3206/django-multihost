@@ -29,12 +29,27 @@ class Deployment(models.Model):
 	pk: int
 
 	git_repo = models.URLField()
-	online = models.BooleanField(default=False, null=True)
 	modified = models.BooleanField(
 		default=False,
 		null=True,
 		help_text="Deployment settings have been modified, but the deployed Docker Compose stack has not been restarted."
 	)
+
+	@property
+	def online(self) -> bool:
+		"""
+		Some services are online.
+		"""
+		raise NotImplementedError('Programatic online checks are still being developed.')
+
+
+	@property
+	def healthy(self) -> bool:
+		"""
+		All services are online.
+		"""
+		raise NotImplementedError('Programatic health checks are still being developed.')
+	
 
 	@property
 	def volumes_folder(self):
@@ -59,7 +74,7 @@ class Deployment(models.Model):
 	)
 
 
-	def _run_compose_command(self, subcommand: str, args: list[str]=[]):
+	def _run_compose_command(self, subcommand: str, args: list[str]=[], dry_run=False):
 		"""
 		Interact with the Docker daemon via Docker Compose and subprocess. The docker-compose.yml file stored in this model is used.
 
@@ -67,6 +82,7 @@ class Deployment(models.Model):
 		---------
 			subcommand (str) : docker compose subcommand to run
 			args (list[str]) : list of arguments to pass to the subcommand
+			dry_run (bool = False) : print and echo command to be run
 
 		Returns
 		-------
@@ -77,12 +93,22 @@ class Deployment(models.Model):
 			'-f', f'{self.compose_file}',
 			subcommand, *args
 		]
-		return subprocess.run(
-			cmd, 
-			stdout=subprocess.PIPE, 
-			stderr=subprocess.PIPE, 
-			encoding='UTF-8'
-		)
+		if dry_run:
+			print(f'Running (not really) {cmd}')
+			return subprocess.run(
+				['echo', *cmd],
+				stdout=subprocess.PIPE, 
+				stderr=subprocess.PIPE, 
+				encoding='UTF-8'
+			)
+		else:
+			return subprocess.run(
+				cmd, 
+				stdout=subprocess.PIPE, 
+				stderr=subprocess.PIPE, 
+				encoding='UTF-8'
+			)
+
 
 	def up(self):
 		return self._run_compose_command('up', args=['-d'])
