@@ -23,6 +23,7 @@ crispy-bulma = "^0.11.0"
 pyyaml = "^6.0.2"
 django-betterforms = "^2.0.0"
 gunicorn = "^23.0.0"
+django-rest-framework = "^0.1.0"
 
 
 [tool.poetry.scripts]

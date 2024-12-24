@@ -14,7 +14,13 @@
 	<div class="buttons">
 		{% if site.deployment %}
 			{% comment %} <a href="{% url "deploy:quickcreate" site_pk=site.pk %}" class="button is-small">Edit deployment</a> {% endcomment %}
-			<a href="{% url "sites:view" pk=site.pk %}" class="button is-small is-primary">View site</a>
+			{% if site.deployment.online %}
+				<a href="{% url "sites:view" pk=site.pk %}" class="button is-small is-primary">View</a>
+			{% else %}
+				<a href="{% url "deploy:start" pk=site.deployment.pk %}" class="button is-small is-primary">Start</a>
+			{% endif %}
+
+		
 		{% elif user.associated_site == site %}
 			<a href="{% url "deploy:quickcreate" site_pk=site.pk %}" class="button is-small is-primary">Create deployment</a>
 		{% elif user.is_superuser or perms.sites.change_site %}

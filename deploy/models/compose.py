@@ -94,13 +94,14 @@ class Deployment(models.Model):
 			subcommand, *args
 		]
 		if dry_run:
-			print(f'Running (not really) {cmd}')
-			return subprocess.run(
+			out = subprocess.run(
 				['echo', *cmd],
 				stdout=subprocess.PIPE, 
 				stderr=subprocess.PIPE, 
 				encoding='UTF-8'
 			)
+			print(out.stdout)
+			return out
 		else:
 			return subprocess.run(
 				cmd, 
@@ -111,14 +112,22 @@ class Deployment(models.Model):
 
 
 	def up(self):
-		return self._run_compose_command('up', args=['-d'])
+		return self._run_compose_command('up', args=['-d'], dry_run=True)
 	
 	def down(self):
-		return self._run_compose_command('down')
+		return self._run_compose_command('down', dry_run=True)
 	
+	def restart(self):
+		return self._run_compose_command('restart', args=['-d'], dry_run=True)
+	
+	# TODO
+	def update(self): pass
+		
+
 	def ps(self) -> dict[Any, Any]:
 		out = self._run_compose_command('ps', args=['--format', 'json'])
 		return json.loads(out.stdout)
+	
 
 
 	def __str__(self):

@@ -36,9 +36,8 @@ INSTALLED_APPS = [
 	'django_extensions',
 	'crispy_forms',
 	'crispy_bulma',
-	# 'revproxy.apps.RevProxyConfig',
-	# 'proxy',
 	'betterforms',
+	'rest_framework',
 	
     # -- Project -- #
 	'sites',
