@@ -19,8 +19,8 @@
 			{% comment %} <a href="{% url "deploy:quickcreate" site_pk=site.pk %}" class="button is-small">Edit deployment</a> {% endcomment %}
 			{% if site.deployment.online %}
 				<a href="{% url "sites:view" pk=site.pk %}" class="button is-small is-primary">View</a>
+				<button onclick="stop({{ site.deployment.pk }}, '{{ csrf_token }}')" class="button is-small is-primary">Stop</button>
 			{% else %}
-				
 				<button onclick="start({{ site.deployment.pk }}, '{{ csrf_token }}')" class="button is-small is-primary">Start</button>
 			{% endif %}
 
