@@ -40,7 +40,8 @@ class Deployment(models.Model):
 		"""
 		Some services are online.
 		"""
-		raise NotImplementedError('Programatic online checks are still being developed.')
+		# raise NotImplementedError('Programatic online checks are still being developed.')
+		return False
 
 
 	@property

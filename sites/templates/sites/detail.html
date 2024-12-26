@@ -1,7 +1,10 @@
 {% extends "base.html" %}
+{% load static %}
 {% load markdown_extras %}
 
 {% block content %}
+
+<script src="{% static "js/deploy/control.js" %}"></script>
 
 <div class="is-flex is-justify-content-space-between">
 	<div class="is-flex is-align-items-flex-end">
@@ -17,8 +20,10 @@
 			{% if site.deployment.online %}
 				<a href="{% url "sites:view" pk=site.pk %}" class="button is-small is-primary">View</a>
 			{% else %}
-				<a href="{% url "deploy:start" pk=site.deployment.pk %}" class="button is-small is-primary">Start</a>
+				
+				<button onclick="start({{ site.deployment.pk }}, '{{ csrf_token }}')" class="button is-small is-primary">Start</button>
 			{% endif %}
+
 
 		
 		{% elif user.associated_site == site %}
