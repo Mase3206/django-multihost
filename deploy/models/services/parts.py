@@ -22,14 +22,15 @@ def validate_and_create_path(value):
 		except OSError as e:
 			raise ValidationError(f"Cannot create directory: {full_path}. Error: {e}")
 
+
 class Volume(models.Model):
 	"""
 	Docker Compose folder-bind-type volume mount object.
 	"""
 	host_path = models.CharField(max_length=255, validators=[validate_and_create_path])
 	guest_path = models.CharField(max_length=50, blank=False)
-	mode = models.CharField(max_length=3, choices=(
-		('', 'Read/write (default)'),
+	mode = models.CharField(max_length=10, default='default', choices=(
+		('default', 'Read/write (default)'),
 		('rw', 'Read/write (explicit)'),
 		('ro', 'Read-only'),
 	))
