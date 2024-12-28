@@ -2,6 +2,8 @@ from typing import Any
 from pathlib import Path
 from django.db import models
 
+import yaml
+
 from django.conf import settings
 """
 - DEPLOY_VOL_ROOT
@@ -19,6 +21,8 @@ from .services import Postgres
 
 from django.db.models.signals import pre_delete
 from deploy.models.deletion import full_delete_deployment
+from deploy.helpers import get_initials
+from deploy.models.services.parts import Network
 
 
 
@@ -60,19 +64,54 @@ class Deployment(models.Model):
 	def compose_file(self):
 		return DEPLOY_COMPOSE_ROOT / str(f'{self.pk}.yml')
 
-	sgi_server = models.OneToOneField(
+	sgi_server: models.OneToOneField[Gunicorn] = models.OneToOneField( #type:ignore
 		Gunicorn,
 		on_delete=models.SET_NULL,
 		blank=True,
 		null=True,
 		verbose_name="SGI server"
 	)
-	database = models.OneToOneField(
+	database: models.OneToOneField[Postgres] = models.OneToOneField( #type:ignore
 		Postgres,
 		on_delete=models.SET_NULL,
 		blank=True,
 		null=True,
 	)
+
+	@property
+	def compose(self) -> dict[str, Any]:
+		nets: set[Network] = {
+			*self.sgi_server.networks.all(),
+			*self.database.networks.all()
+		}
+		netconf = {}
+		for n in nets:
+			netconf[n.name] = {
+				'name': n.name,
+				'external': n.external,
+			}
+		
+		out = {
+			'name': get_initials(self.site.name), #type:ignore
+			'services': {
+				'gunicorn': {
+					'image': 'ghcr.io/Mase3206/dmh-site',
+					'volumes': [v.compose for v in self.sgi_server.volumes.all()],
+					'networks': [n.compose for n in self.sgi_server.networks.all()],
+					'environment': [e.compose for e in self.sgi_server.environment.all()],
+					'labels': [l.compose for l in self.sgi_server.labels.all()],
+				},
+				'postgres': {
+					'image': 'postgres:17',
+					'volumes': [v.compose for v in self.database.volumes.all()],
+					'networks': [n.compose for n in self.database.networks.all()],
+					'environment': [e.compose for e in self.database.environment.all()],
+				}
+			},
+			'networks': netconf
+		}
+
+		return out
 
 
 	def _run_compose_command(self, subcommand: str, args: list[str]=[], dry_run=False):
@@ -89,6 +128,8 @@ class Deployment(models.Model):
 		-------
 			CompletedProcess
 		"""
+		if self._check_compose_file():
+			print(f'Compose file does not exist, creating at {self.compose_file}')
 		cmd = [
 			'docker', 'compose', 
 			'-f', f'{self.compose_file}',
@@ -110,19 +151,47 @@ class Deployment(models.Model):
 				stderr=subprocess.PIPE, 
 				encoding='UTF-8'
 			)
+		
+
+	def _compose_init(self):
+		with open(self.compose_file, 'w+') as f:
+			yaml.safe_dump(self.compose, f)
 
 
-	def up(self):
+	def _check_compose_file(self, force=False) -> bool:
+		"""
+		Checks if the commpose file for this deployment is already created. If so, return True. If not, create it and return False.
+
+		Arguments
+		---------
+			force (bool=False) : forcibly re-create the compose file, even if it already exists.
+		"""
+
+		if self.compose_file.exists():
+			if force:
+				self.compose_file.unlink()
+				self.compose_file.touch()
+				self._compose_init()
+
+			return True
+		else:
+			self.compose_file.touch(exist_ok=False)
+			self._compose_init()
+			return False
+
+
+	def up(self) -> subprocess.CompletedProcess[str]:
 		return self._run_compose_command('up', args=['-d'], dry_run=True)
 	
-	def down(self):
+	def down(self) -> subprocess.CompletedProcess[str]:
 		return self._run_compose_command('down', dry_run=True)
 	
-	def restart(self):
+	def restart(self) -> subprocess.CompletedProcess[str]:
 		return self._run_compose_command('restart', args=['-d'], dry_run=True)
 	
 	# TODO
-	def update(self): pass
+	def update(self): 
+		...
 		
 
 	def ps(self) -> dict[Any, Any]:

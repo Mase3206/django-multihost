@@ -45,4 +45,3 @@ def parse_actions(depl: Deployment, payload: Actions):
 			case 'start':   _start(depl)
 			case 'stop':    _stop(depl)
 			case 'restart': _restart(depl)
-
