@@ -41,7 +41,9 @@ def parse_actions(depl: Deployment, payload: Actions):
 
 	for act in payload['actions']:
 		match act:
-			case 'update':  _update(depl)
-			case 'start':   _start(depl)
-			case 'stop':    _stop(depl)
-			case 'restart': _restart(depl)
+			case 'update':  return _update(depl)
+			case 'start':   return _start(depl)
+			case 'stop':    return _stop(depl)
+			case 'restart': return _restart(depl)
+
+	

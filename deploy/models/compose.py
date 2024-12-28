@@ -96,7 +96,10 @@ class Deployment(models.Model):
 			'services': {
 				'gunicorn': {
 					'image': 'ghcr.io/Mase3206/dmh-site',
-					'volumes': [v.compose for v in self.sgi_server.volumes.all()],
+					'volumes': [
+						*[v.compose for v in self.sgi_server.volumes.all()],
+						f'GIT_REPO={self.git_repo}'
+					],
 					'networks': [n.compose for n in self.sgi_server.networks.all()],
 					'environment': [e.compose for e in self.sgi_server.environment.all()],
 					'labels': [l.compose for l in self.sgi_server.labels.all()],
@@ -181,13 +184,13 @@ class Deployment(models.Model):
 
 
 	def up(self) -> subprocess.CompletedProcess[str]:
-		return self._run_compose_command('up', args=['-d'], dry_run=True)
+		return self._run_compose_command('up', args=['-d'], dry_run=False)
 	
 	def down(self) -> subprocess.CompletedProcess[str]:
-		return self._run_compose_command('down', dry_run=True)
+		return self._run_compose_command('down', dry_run=False)
 	
 	def restart(self) -> subprocess.CompletedProcess[str]:
-		return self._run_compose_command('restart', args=['-d'], dry_run=True)
+		return self._run_compose_command('restart', args=['-d'], dry_run=False)
 	
 	# TODO
 	def update(self): 

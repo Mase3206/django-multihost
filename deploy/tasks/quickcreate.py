@@ -85,7 +85,7 @@ def create(form: QuickcreateCreationMultiForm, context: dict[str, Any]):
 		vols = [
 			Volume.objects.create(
 				host_path=str(DEPLOY_VOL_ROOT / f'{deployment.pk}' / 'gunicorn'),
-				guest_path='/run/www/django',
+				guest_path='/var/run/dmh-site',
 				mode=''
 			),
 		]
