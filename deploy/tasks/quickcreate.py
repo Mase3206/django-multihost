@@ -262,6 +262,10 @@ def create(form: QuickcreateCreationMultiForm, context: dict[str, Any]):
 				value=gunicorn.django_project_folder
 			),
 			EnvironmentVariable.objects.create(
+				name='GIT_REPO',
+				value=deployment.git_repo
+			), 
+			EnvironmentVariable.objects.create(
 				name='SECRET_KEY',
 				value=random_string(64)
 			),
