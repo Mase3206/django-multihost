@@ -1,4 +1,10 @@
 from typing import Any
+from dataclasses import dataclass
+
+from tempfile import TemporaryDirectory
+import os
+from pathlib import Path
+import subprocess
 
 from sites.models import Site
 
@@ -14,12 +20,138 @@ from deploy.models.services.parts import (
 	EnvironmentVariable,
 	Label,
 )
-from deploy.helpers import random_string
+from deploy.helpers import random_string, auto_repr
+from deploy.exceptions import GitError
 
 from . import (
 	DEPLOY_COMPOSE_ROOT,
 	DEPLOY_VOL_ROOT,
 )
+
+class PathResult:
+	result_name = 'PathResult'
+
+	def __init__(self, root: Path, full_path: Path, project_root: Path):
+		self.root = root
+		self.full_path = full_path
+		self.project_root = project_root
+		# grab just the parts within the project root, excluding the project root itself
+		self.module_path = Path(*self.full_path.parts[len(self.project_root.parts):])
+
+	def modulify(self) -> str:
+		"""
+		The settings path as a dot-separated module path for Python imports.
+		"""
+		parts = [*self.module_path.parts]
+
+		# remove .py extension
+		if (s := parts[-1].split('.'))[-1] == 'py':
+			parts[-1] = s[0] 
+
+		return '.'.join(parts)
+	
+	def __repr__(self) -> str:
+		return auto_repr(self, self.result_name)
+
+
+class SettingsModule(PathResult):
+	root: Path
+	"""The parent folder containging the settings module."""
+	full_path: Path
+	"""The full path to the settings module."""
+	project_root: Path
+	"""The root of the project."""
+	module_path: Path
+	"""The relative path to the settings module, relative to the project root."""
+
+	result_name = 'SettingsModule'
+
+	def __init__(self, root: Path, full_path: Path, project_root: Path):
+		"""
+		An object containing properties about the project's settings module.
+
+		Arguments
+		---------
+			root (Path) : the parent folder containging the settings module
+			full_path (Path) : the full path to the settings module
+			project_root (Path) : the project root
+		"""
+
+		super().__init__(root, full_path, project_root)
+
+
+class ManageFile(PathResult):
+	root: Path
+	"""The parent folder containging the manage.py file."""
+	full_path: Path
+	"""The full path to the manage.py file."""
+	project_root: Path
+	"""The root of the project."""
+	module_path: Path
+	"""The relative path to the manage.py file, relative to the project root."""
+
+	result_name = 'ManageFile'
+
+	def __init__(self, root: Path, full_path: Path, project_root: Path):
+		"""
+		An object containing properties about the project's manage.py file.
+
+		Arguments
+		---------
+			root (Path) : the parent folder containging the manage.py file
+			full_path (Path) : the full path to the manage.py file
+			project_root (Path) : the project root
+		"""
+		super().__init__(root, full_path, project_root)
+
+	
+
+
+def search_for_settings_manage(git_repo_url: str, branch: str = ''):
+	with TemporaryDirectory() as tmpdir:
+		manfile = None
+		setmod = None
+		if branch != '':
+			cmd = ['git', 'clone', '-b', branch, git_repo_url, tmpdir]
+		else:
+			cmd = ['git', 'clone', git_repo_url, tmpdir]
+		out = subprocess.run(
+			cmd, 
+			stdout=subprocess.PIPE, 
+			stderr=subprocess.PIPE, 
+			encoding='UTF-8'
+		)
+		if out.returncode == 0:
+			print(f'Cloned to {tmpdir}')
+		else:
+			raise GitError(f'The git clone failed. Reason: {out.stderr}')
+
+		
+		for root, dirs, files in os.walk(tmpdir):
+			for f in files:
+				if f == 'manage.py':
+					manfile = ManageFile(Path(root), Path(root) / f, Path(tmpdir))
+					print('Found manage.py file.')
+				if f == 'settings.py':
+					setmod = SettingsModule(Path(root), Path(root) / f, Path(tmpdir))
+					print('Found settings module.')
+			for d in dirs:
+				if d == 'settings':
+					if (Path(root) / d / '__init__.py').is_file():
+						setmod = SettingsModule(Path(root), Path(root) / d, Path(tmpdir))
+						print('Found settings module.')
+
+			if manfile and setmod:
+				break
+
+	if not manfile:
+		raise FileNotFoundError('The manage.py file was not found in the cloned git repository.')
+	elif not setmod:
+		raise FileNotFoundError('The settings module was not found in the cloned git repository.')
+	else:
+		return manfile, setmod
+
+
 
 
 
