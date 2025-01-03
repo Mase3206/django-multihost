@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e
+
 init_check_file='/var/run/dmh-site/.initialized'
 venv_name='venv'
 
@@ -22,8 +24,6 @@ function first_run () {
 	fi
 
 	DJANGO_SUPERUSER_USERNAME='admin' DJANGO_SUPERUSER_EMAIL='admin@localhost' DJANGO_SUPERUSER_PASSWORD='password' python manage.py createsuperuser --noinput
-
-	poetry add gunicorn
 }
 
 function check_first_run () {
@@ -39,6 +39,9 @@ function init () {
 	python -m venv $venv_name
 	source $venv_name/bin/activate
 	pip install -r requirements.txt
+
+	python -m pip install gunicorn
+	python -m pip install --upgrade 'whitenoise=6.8'
 
 	python manage.py migrate
 	python manage.py collectstatic --noinput
