@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+{% load static %}
+{% load bulma_tags %}
+<html lang="en" data-theme="light">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Document</title>
+
+		{% font_awesome %}
+		<link rel="stylesheet" href="{% static 'bulma/css/style.css' %}" />
+	</head>
+
+
+	<body>
+		<div id="app">
+			{% include "_components/nav.html" %}
+			<section class="columns is-fullheight">
+				{% include "_components/sidebar.html" %}
+
+				<div class="content column">
+					{% comment %} <div class="column"> {% endcomment %}
+						<div class="section">
+							{% block content %}
+							{% endblock content %}
+						</div>
+					{% comment %} </div> {% endcomment %}
+				</div>
+			</section>
+		</div>
+	</body>
+
+
+	{% comment %} Yes, I'm using jQuery. Sue me. {% endcomment %}
+	<script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+
+	<script src="{% static 'js/navbar.js' %}"></script>
+</html>

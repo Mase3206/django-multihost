@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+<h2>Delete site</h2>
+<form action="" method="post">{% csrf_token %}
+	{{ form|crispy }}
+
+	<p>
+		Are you sure you want to delete <span class="has-text-weight-bold">{{ site.name }}?</span>
+	</p>
+
+	<button class="button is-danger ms-0 mt-2" type="submit">Confirm</button>
+</form>
+
+{% endblock content %}
