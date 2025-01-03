@@ -85,12 +85,13 @@ class EnvironmentVariable(models.Model):
 	)
 
 	@property
-	def compose(self) -> str:
+	def compose(self):
 		"""Return object in a Compose-compatable format."""
-		if self.value:
-			return f"{self.name}='{self.value}'"
-		else:
-			return f"{self.name}=''"
+		return {self.name: self.value}
+		# if self.value:
+		# 	return f"{self.name}='{self.value}'"
+		# else:
+		# 	return f"{self.name}=''"
 		
 	def __str__(self) -> str:
 		return f'({self.pk}) {self.name}'
