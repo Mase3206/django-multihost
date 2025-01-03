@@ -1,6 +1,7 @@
 from django.forms import ModelForm, Textarea
 
 from .models import Site
+from account.models import CustomUser
 
 
 class SiteForm(ModelForm):
@@ -20,3 +21,12 @@ class SiteForm(ModelForm):
 			# 'use_bundled_db': 'Use a bundled Postgres database instead of a manually-configured one.',   # TODO - move this to deploy.forms
 			'description': 'CommonMark-compliant Markdown formatting is accepted.'
 		}
+
+
+class UserJoinForm(ModelForm):
+	class Meta:
+		model = CustomUser
+		fields = [
+			'associated_site'
+		]
+		exclude = fields

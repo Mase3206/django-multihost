@@ -16,9 +16,8 @@ from django.views.decorators.csrf import csrf_exempt
 # from proxy.views import proxy_view
 
 from .models import Site
-from .forms import SiteForm
+from .forms import SiteForm, UserJoinForm
 
-from account.models import CustomUser
 
 # Create your views here.
 class SitesListView(ListView):
@@ -101,16 +100,15 @@ class SiteDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
 
 class SiteJoinView(LoginRequiredMixin, UpdateView):
-	model = CustomUser
-	fields = ['associated_site']
-	exclude = ['associated_site']
+	model = Site
+	form_class = UserJoinForm
 	login_url = settings.LOGIN_URL
 	template_name = 'sites/join.html'
 
-	def get_context_data(self, **kwargs) -> dict:
-		context = super().get_context_data(**kwargs)
-		context['site'] = Site.objects.get(pk=self.kwargs['pk'])
-		return context
+	# def get_context_data(self, **kwargs) -> dict:
+	# 	context = super().get_context_data(**kwargs)
+	# 	context['site'] = Site.objects.get(pk=self.kwargs['pk'])
+	# 	return context
 	
 	def get_success_url(self) -> str:
 		return reverse('sites:detail', kwargs={'pk': self.kwargs['pk']})
@@ -122,7 +120,7 @@ class SiteJoinView(LoginRequiredMixin, UpdateView):
 		This seems to be a critical step.
 		"""
 		form = super().get_form(form_class) #type:ignore
-		form.initial['associated_site'] = Site.objects.get(pk=self.kwargs['pk'])
+		form.initial['associated_site'] = self.get_object()
 
 		return form
 	
@@ -134,12 +132,14 @@ class SiteJoinView(LoginRequiredMixin, UpdateView):
 		
 		If not, then save the form.
 		"""
-		obj: CustomUser = form.save(commit=False)
+		obj: Site = form.save(commit=False)
+		user: CustomUser = CustomUser.objects.get(pk=self.request.user.pk)
 
-		obj.associated_site = Site.objects.get(pk=self.kwargs['pk'])
+		user.associated_site = obj
+		user.save()
 		obj.save()
 
-		assert obj.associated_site == Site.objects.get(pk=self.kwargs['pk']), 'obj.associated_site field was not correctly set!'
+		assert user.associated_site == obj, 'obj.associated_site field was not correctly set!'
 
 		# obj = CustomUser.objects.get(pk=self.request.user.pk)
 		# site = Site.objects.get(pk=self.kwargs['pk'])
