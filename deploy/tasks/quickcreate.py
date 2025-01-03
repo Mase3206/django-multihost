@@ -104,13 +104,34 @@ class ManageFile(PathResult):
 		"""
 		super().__init__(root, full_path, project_root)
 
+
+@dataclass
+class PyProjectFile:
+	root: Path
+	full_path: Path
+	project_root: Path
+
+	@property
+	def module_path(self):
+		return Path(*self.full_path.parts[len(self.project_root.parts):])
+
 	
 
 
-def search_for_settings_manage(git_repo_url: str, branch: str = ''):
+def search_for_project_files(git_repo_url: str, branch: str = ''):
+	"""
+	Attempts to find (required): 
+	- manage.py
+	- the settings module (file or folder)
+	
+	Attempts to find (optional, but helpful):
+	- pyproject.toml
+	"""
 	with TemporaryDirectory() as tmpdir:
 		manfile = None
 		setmod = None
+		pyproj = None
+
 		if branch != '':
 			cmd = ['git', 'clone', '-b', branch, git_repo_url, tmpdir]
 		else:
@@ -135,6 +156,10 @@ def search_for_settings_manage(git_repo_url: str, branch: str = ''):
 				if f == 'settings.py':
 					setmod = SettingsModule(Path(root), Path(root) / f, Path(tmpdir))
 					print('Found settings module.')
+				if f == 'pyproject.toml':
+					pyproj = PyProjectFile(Path(root), Path(root) / f, Path(tmpdir))
+					print('Found pyproject.toml file. This will prove useful later!')
+
 			for d in dirs:
 				if d == 'settings':
 					if (Path(root) / d / '__init__.py').is_file():
@@ -149,9 +174,7 @@ def search_for_settings_manage(git_repo_url: str, branch: str = ''):
 	elif not setmod:
 		raise FileNotFoundError('The settings module was not found in the cloned git repository.')
 	else:
-		return manfile, setmod
-
-
+		return manfile, setmod, pyproj
 
 
 
@@ -162,6 +185,7 @@ def create(form: QuickcreateCreationMultiForm, context: dict[str, Any]):
 	site.deployment = deployment
 	site.save()
 
+	# manage_file, settings_module, pyproj_file = search_for_project_files(deployment.git_repo)
 
 	# create shared objects
 	internal_network = Network.objects.create(
