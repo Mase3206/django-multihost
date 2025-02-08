@@ -178,6 +178,7 @@ from_bulma/
 
 # Misc.
 **/*.DS_Store
+static/bulma/css/
 
 # DMH-specific stuff
 deploydata/

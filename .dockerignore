@@ -3,6 +3,7 @@ __pycache__/
 .vscode/
 dockerfiles/
 !dockerfiles/dmh/entrypoint.sh
+!dockerfiles/site/entrypoint.sh
 static/bulma/css/
 staticfiles/
 tests/
@@ -11,3 +12,4 @@ db.sqlite3
 package-lock.json
 package.json
 poetry.lock
+**/*.DS_Store

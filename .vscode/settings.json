@@ -17,5 +17,8 @@
 			"comments": false,
 			"strings": true
 		}
+	},
+	"files.associations": {
+		".dockerignore": "ignore"
 	}
 }
