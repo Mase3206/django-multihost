@@ -1,0 +1,67 @@
+<nav class="nav" role="navigation" aria-label="main navigation">
+	<div class="navbar">
+		<div class="navbar-brand">
+			<a class="navbar-item" href="/">
+				Django MultiHost
+			</a>
+
+			<p class="navbar-item">
+				{{ user.username }}
+			</p>
+
+			
+
+			<a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="baseNavbar">
+				<span aria-hidden="true"></span>
+				<span aria-hidden="true"></span>
+				<span aria-hidden="true"></span>
+			</a>
+		</div>
+		
+
+		<div id="baseNavbar" class="navbar-menu">
+			<div class="navbar-end">
+				<a href="/" class="navbar-item is-hidden-tablet">
+					<span class="icon"><i class="fa fa-home"></i></span> Home
+				</a>
+				<a href="{% url "sites:list" %}" class="navbar-item is-hidden-tablet">
+					<span class="icon"><i class="fa fa-table"></i></span> Sites
+				</a>
+				<a class="navbar-item is-hidden-tablet">
+					<span class="icon"><i class="fa fa-info"></i></span> About
+				</a>
+
+
+				<hr class="is-hidden-mobile mx-3 my-1" />
+				<div class="navbar-item">
+					<div class="buttons">
+						{% if user.is_staff %}
+						<a class="button is-danger" href="{% url "admin:index" %}" class="navbar-item">
+							Admin
+						</a>
+						{% endif %}
+
+						{% if user.is_authenticated %}
+						{% comment %} <a href="{% url "logout" %}" class="navbar-item">
+							<span class="icon"><i class="fas fa-sign-out-alt"></i></span><span class="is-hidden-desktop"> Logout</span>
+						</a> {% endcomment %}
+						<form class="" id="logoutForm" method="post" action="{% url 'logout' %}">{% csrf_token %}
+							<button type="submit" class="button" id="logoutButton">
+								Logout
+							</button>
+						</form>
+
+						{% else %}
+						<a class="button is-primary" href="{% url "login" %}">
+							Login
+						</a>
+						<a class="button" href="{% url "signup" %}">
+							Signup
+						</a>
+						{% endif %}
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</nav>

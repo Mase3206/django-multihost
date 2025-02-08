@@ -1,0 +1,35 @@
+<aside class="menu column is-narrow is-fullheight section is-hidden-mobile">
+	<p class="menu-label is-hidden-mobile">Navigation</p>
+
+	{% with request.resolver_match.url_name as url_name and request.resolver_match.app_name as app_name %}
+	<ul class="menu-list">
+		<li>
+			<a href="/" class="{% if url_name == 'home' %}is-active{% endif %}">
+				<span class="icon"><i class="fa fa-home"></i></span> Home
+			</a>
+		</li>
+
+		<li>
+			<a href="{% url 'sites:list' %}" class="{% if app_name|add:':'|add:url_name == 'sites:list' %}is-active{% endif %}">
+				<span class="icon"><i class="fa fa-table"></i></span> Sites
+			</a>
+
+			<ul>
+				{% for site in all_sites %}
+				<li>
+					<a href="{% url "sites:detail" pk=site.pk %}" class="{% if site.pk == current_pk %}is-active{% endif %}">
+						{{ site.name }}
+					</a>
+				</li>
+				{% endfor %}
+			</ul>
+		</li>
+
+		<li>
+			<a href="https://github.com/Mase3206/Django-MultiHost" class="" target="_blank">
+				<span class="icon"><i class="fab fa-github"></i></span> GitHub
+			</a>
+		</li>
+	</ul>
+	{% endwith %}
+</aside>

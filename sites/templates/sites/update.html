@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+<h2>Create site</h2>
+<form action="" method="post">{% csrf_token %}
+	<!-- Row 1 -->
+	<div class="columns">
+		<div class="column is-8">
+			{{ form.name|as_crispy_field }}
+		</div>
+	</div>
+
+	<div class="columns">
+		<div class="column">
+			{{ form.description|as_crispy_field }}
+		</div>
+	</div>
+	<div class="columns">
+		<div class="column">
+			{{ form.description_brief|as_crispy_field }}
+		</div>
+	</div>
+
+	<button class="button is-success ms-0 mt-2" type="submit">Update</button>
+</form>
+
+{% endblock content %}

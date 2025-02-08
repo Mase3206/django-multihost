@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2>403 - Forbidden</h2>
+<p>
+	You do not have the necessary permissions to do the requested action.
+</p>
+
+<p>
+	<strong>Reason: </strong> {{ exception }}
+</p>
+
+<a href="{% url 'home' %}" class="button is-primary">Go home</a>
+
+{% endblock content %}

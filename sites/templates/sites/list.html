@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% if not user.associated_site %}
+<div class="buttons is-right mb-4">
+	<a href="{% url 'sites:create' %}" class="button is-primary">New</a>
+</div>
+{% endif %}
+
+
+{% for site in site_list %}
+<div class="card">
+	<div class="card-header"><a href="{% url 'sites:detail' pk=site.pk %}" class="card-header-title">{{ site.name }}</a></div>
+	<div class="card-content">
+		<div class="content">{{ site.description_brief }}</div>
+	</div>
+</div>
+<br />
+{% endfor %}
+
+{% endblock content %}

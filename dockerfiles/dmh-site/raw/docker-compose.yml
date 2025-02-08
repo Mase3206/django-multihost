@@ -1,0 +1,42 @@
+name: agttg
+networks:
+  internal_7:
+    external: false
+    name: internal_7
+  traefik:
+    external: true
+    name: traefik
+services:
+  gunicorn:
+    environment:
+    - "POSTGRES_DB=pgdb"
+    - "POSTGRES_USER=pguser"
+    - "POSTGRES_PASSWORD=Wj8T7JyjhJ5pTwC8CXDrCkyIoqp9cxrhS9KbgCLddmYk64UaytnZivE1nbL9me"
+    - "SITE_PATH=sites/1/view/"
+    - "PROJECT_FOLDER=django_project"
+    - "SECRET_KEY=JY6raLzdFHZesvxbBZ8gK63WBAMAucF6IKEVKljmWyeQdprvCiXyayUyRktbWr"
+    - "DEBUG=0"
+    - "GIT_REPO=https://github.com/mase3206/group-awesome"
+    image: dmh-site:testing-raw
+    labels:
+    - traefik.enable=true
+    - traefik.http.routers.gunicorn-7.rule=Host(gunicorn)
+    - traefik.http.routers.gunicorn-7.rule=PathPrefix(`/sites/1/view/`)
+    - traefik.http.routers.gunicorn-7.middlewares=gunicorn-7-stripprefix
+    - traefik.http.middlewares.gunicorn-7-stripprefix.stripprefix.prefixes=/sites/1/view/
+    - traefik.docker.network=traefik
+    networks:
+    - traefik
+    - internal_7
+    volumes:
+    - /Users/noahroberts/GitHub/django-multihost/deploydata/volumes/7/gunicorn:/var/run/dmh-site:default
+  postgres:
+    environment:
+    - "POSTGRES_DB=pgdb"
+    - "POSTGRES_USER=pguser"
+    - "POSTGRES_PASSWORD=Wj8T7JyjhJ5pTwC8CXDrCkyIoqp9cxrhS9KbgCLddmYk64UaytnZivE1nbL9me"
+    image: postgres:17
+    networks:
+    - internal_7
+    volumes:
+    - /Users/noahroberts/GitHub/django-multihost/deploydata/volumes/7/postgres:/var/lib/postgresql/data
