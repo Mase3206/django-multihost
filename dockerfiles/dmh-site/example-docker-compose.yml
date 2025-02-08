@@ -1,0 +1,33 @@
+services:
+  gunicorn:
+    # image: dmh:testing
+    build:
+      dockerfile: ./dockerfiles/dmh/Dockerfile
+      context: ..
+    volumes:
+      - ./.volumes/gunicorn:/var/dmh
+    environment:
+      DJANGO_SUPERUSER_USERNAME: admin
+      DJANGO_SUPERUSER_EMAIL: admin@localhost
+      DJANGO_SUPERUSER_PASSWORD: password
+
+      PROJECT_FOLDER: django_project
+      GIT_REPO: https://github.com/mase3206/group-awesome
+
+      SITE_PATH: sites/0/deployment-or-whatever
+      SECRET_KEY: very secret
+      DEBUG: 0
+    labels:
+      - "traefik.enable=true"
+      # set the path
+      - "traefik.http.routers.gunicorn-${GROUP_NAME}.rule=PathPrefix(`/`)"
+    networks:
+      - traefik
+
+
+networks:
+  default:
+    name: dmh
+  traefik:
+    name: traefik
+    external: true

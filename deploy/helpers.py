@@ -23,3 +23,8 @@ def get_initials(string: str, lower=True) -> str:
 	else:
 		return ''.join([x[0].upper() for x in string.split(' ')])
 
+
+def auto_repr(obj, class_name: str) -> str:
+	p: dict = obj.__dict__
+	a = [f"{k}='{v}'" if isinstance(v, str) else f'{k}={repr(v)}' for k, v in p.items()]
+	return f'{class_name}({', '.join(a)})'

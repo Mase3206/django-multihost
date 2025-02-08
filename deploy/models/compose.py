@@ -95,20 +95,19 @@ class Deployment(models.Model):
 			'name': get_initials(self.site.name), #type:ignore
 			'services': {
 				'gunicorn': {
-					'image': 'ghcr.io/Mase3206/dmh-site',
+					'image': 'ghcr.io/mase3206/dmh-site',
 					'volumes': [
 						*[v.compose for v in self.sgi_server.volumes.all()],
-						f'GIT_REPO={self.git_repo}'
 					],
 					'networks': [n.compose for n in self.sgi_server.networks.all()],
-					'environment': [e.compose for e in self.sgi_server.environment.all()],
+					'environment': {e.name: e.value for e in self.sgi_server.environment.all()},
 					'labels': [l.compose for l in self.sgi_server.labels.all()],
 				},
 				'postgres': {
 					'image': 'postgres:17',
 					'volumes': [v.compose for v in self.database.volumes.all()],
 					'networks': [n.compose for n in self.database.networks.all()],
-					'environment': [e.compose for e in self.database.environment.all()],
+					'environment': {e.name: e.value for e in self.sgi_server.environment.all()},
 				}
 			},
 			'networks': netconf

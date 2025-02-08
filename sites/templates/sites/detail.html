@@ -46,7 +46,7 @@
 
 		
 		{% if not user.associated_site %}
-			<a href="{% url "sites:join" pk=site.pk %}" class="button is-small is-info">Join site</a>
+			<a href="{% url "sites:join" site_pk=site.pk %}" class="button is-small is-info">Join site</a>
 		{% endif %}
 	</div>
 </div>

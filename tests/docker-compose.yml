@@ -15,29 +15,29 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     networks:
-      - default
+      # - default
       - traefik
 
-  gunicorn:
-    # image: dmh:testing
-    build:
-      dockerfile: ./dockerfiles/dmh/Dockerfile
-      context: ..
-    volumes:
-      - ./.volumes/gunicorn:/var/dmh
-    environment:
-      DJANGO_SUPERUSER_USERNAME: admin
-      DJANGO_SUPERUSER_EMAIL: admin@localhost
-      DJANGO_SUPERUSER_PASSWORD: password
-    labels:
-      - "traefik.enable=true"
-      # set the path
-      - "traefik.http.routers.gunicorn-${GROUP_NAME}.rule=PathPrefix(`/`)"
-    networks:
-      - traefik
+  # gunicorn:
+  #   # image: dmh:testing
+  #   build:
+  #     dockerfile: ./dockerfiles/dmh/Dockerfile
+  #     context: ..
+  #   volumes:
+  #     - ./.volumes/gunicorn:/var/dmh
+  #   environment:
+  #     DJANGO_SUPERUSER_USERNAME: admin
+  #     DJANGO_SUPERUSER_EMAIL: admin@localhost
+  #     DJANGO_SUPERUSER_PASSWORD: password
+  #   labels:
+  #     - "traefik.enable=true"
+  #     # set the path
+  #     - "traefik.http.routers.gunicorn-${GROUP_NAME}.rule=PathPrefix(`/`)"
+  #   networks:
+  #     - traefik
 
 networks:
-  default:
-    name: dmh
+  # default:
+  #   name: dmh
   traefik:
     name: traefik

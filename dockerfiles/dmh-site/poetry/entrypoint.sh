@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e
+
 init_check_file='/var/run/dmh-site/.initialized'
 
 function first_run () {
