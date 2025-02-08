@@ -4,7 +4,7 @@ from . import (
 	env
 )
 
-DEPLOY_START_PORT = 8000
+HOSTNAME = 'localhost'
 
 if env.bool('DMH_DOCKER', default=False):
 	DEPLOY_DATA_ROOT = DOCKER_BASE_DIR / 'deploydata'

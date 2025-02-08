@@ -14,6 +14,9 @@ services:
       - "8080:8080" # web UI
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - default
+      - traefik
 
   gunicorn:
     # image: dmh:testing
@@ -30,3 +33,11 @@ services:
       - "traefik.enable=true"
       # set the path
       - "traefik.http.routers.gunicorn-${GROUP_NAME}.rule=PathPrefix(`/`)"
+    networks:
+      - traefik
+
+networks:
+  default:
+    name: dmh
+  traefik:
+    name: traefik

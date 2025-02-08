@@ -57,7 +57,8 @@ class DeploymentAPIView(APIView):
 				{'res': 'Successfully completed all actions.'},
 				status=status.HTTP_200_OK
 			)
-		except CalledProcessError:
+		except CalledProcessError as e:
+			raise e
 			return Response(
 				{'res': 'One or more actions failed.'},
 				status=status.HTTP_500_INTERNAL_SERVER_ERROR
