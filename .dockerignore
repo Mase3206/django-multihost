@@ -1,0 +1,13 @@
+__pycache__/
+.github/
+.vscode/
+dockerfiles/
+!dockerfiles/dmh/entrypoint.sh
+static/bulma/css/
+staticfiles/
+tests/
+.gitignore
+db.sqlite3
+package-lock.json
+package.json
+poetry.lock

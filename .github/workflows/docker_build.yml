@@ -1,0 +1,76 @@
+name: Build and Push
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  # export-requirements-txt:
+  #   name: Export requrements.txt
+  #   runs-on: ubuntu-latest
+
+  #   steps:
+  #   - name: Checkout repo
+  #     uses: actions/checkout@v4
+
+  #   - name: Run 'poetry export requirements.txt'
+  #     uses: DivideProjects/poetry-export-requirements-action@v1
+  #     with:
+  #       without-hashes: true
+  #       outfile-name: requirements.txt
+
+  #   - name: Save requirements.txt to artifact
+  #     uses: actions/upload-artifact@v4
+  #     with:
+  #       name: exported-requirements-txt
+  #       path: ./
+    
+
+  push_to_registry:
+    name: Push Docker image to GHCR
+    runs-on: ubuntu-latest
+    # needs: export-requirements-txt
+    permissions:
+      packages: write
+      contents: read
+      attestations: write
+      id-token: write
+    
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      # - name: Retrieve requirements.txt
+      #   uses: actions/download-artifact@v4
+      #   with:
+      #     name: exported-requirements-txt
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/mase3206/django-multihost
+
+      - name: Build and push Docker image
+        id: push
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./dockerfiles/dmh/Dockerfile
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+
+      - name: Generate artifact attestation
+        uses: actions/attest-build-provenance@v2
+        with:
+          subject-name: ghcr.io/mase3206/django-multihost
+          subject-digest: ${{ steps.push.outputs.digest }}
+          push-to-registry: true

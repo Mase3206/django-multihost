@@ -26,23 +26,14 @@ function check_first_run () {
 	[ -f "$init_check_file" ]
 }
 
-
-function init () {
-	poetry install
-	poetry run manage migrate
-	poetry run manage collectstatic --noinput
-}
-
 function start () {
 	poetry run gunicorn -b 0.0.0.0:8000 django_multihost.wsgi
 }
 
+poetry run manage migrate
 
-# check if this volume has been initalized
-# if not, initialize it
-
-init
-
+# check if this instance is new
+# if it is, initialize it
 check_first_run || first_run
 
 

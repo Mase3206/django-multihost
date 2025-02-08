@@ -181,3 +181,7 @@ from_bulma/
 
 # DMH-specific stuff
 deploydata/
+
+# Dependency Management
+# The Docker image shouldn't use Poetry directly, as it alone has 500 MB of dependencies.
+requirements.txt
