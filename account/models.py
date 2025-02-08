@@ -5,8 +5,8 @@ from sites.models import Site
 class CustomUser(AbstractUser):
 	associated_site = models.ForeignKey(
 		Site, 
-		on_delete=models.CASCADE,
-		blank=False,
+		on_delete=models.SET_NULL,
+		blank=True,
 		null=True
 	)
 	github_username = models.CharField(
