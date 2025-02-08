@@ -1,11 +1,3 @@
-> [!WARNING]
-> This is no longer the primary repository for the Django MultiHost project. It is now located on my personal Gitea server, as it allows for better flexibility for my needs without needing to pay for a GitHub subscription. This repository will eventually become a mirror. Here are the links:
-> - [Organization](https://git.noahsroberts.com/django-multihost)
-> - [Server](https://git.noahsroberts.com/django-multihost/server)
-> - [Client package](https://git.noahsroberts.com/django-multihost/client) (installed into Django project... or at least that's the hope)
-
----
-
 # Django MultiHost
 
 > [!NOTE]
